@@ -1,0 +1,53 @@
+﻿@model MvcBootstrap.Models.Student
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+<div class="well">
+@using (Html.BeginForm("Edit", "Student", FormMethod.Post, new { name = "studentform", @class = "form-horizontal form-width" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Student</legend>
+
+        @Html.HiddenFor(model => model.StudentID)
+
+        <div class="form-group">
+            <label class="col-lg-2 control-label">Last Name</label>
+            <div class="col-lg-10">
+                @Html.TextBoxFor(model => model.LastName, new { @class = "form-control", placeholder = "Last Name" })
+                @Html.ValidationMessageFor(model => model.LastName,  "", new { @class = "label label-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label">First Middle Name</label>
+            <div class="col-lg-10">
+                @Html.TextBoxFor(model => model.FirstMidName, new { @class = "form-control", placeholder = "First Middle Name" })
+                @Html.ValidationMessageFor(model => model.FirstMidName, "", new { @class = "label label-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label">Enrollment Date</label>
+            <div class="col-lg-10">
+                @Html.TextBoxFor(model => model.EnrollmentDate, new { @class = "form-control", placeholder = "Enrollment Date" })
+                @Html.ValidationMessageFor(model => model.EnrollmentDate, "", new { @class = "label label-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-offset-2 col-lg-10">
+                <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-floppy-disk"></i> Save</button>
+                <a class="btn btn-default dark" href="@Url.Action("Index")"><i class="glyphicon glyphicon-arrow-left"></i> Cancel</a>
+            </div>
+        </div>
+    </fieldset>
+}
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

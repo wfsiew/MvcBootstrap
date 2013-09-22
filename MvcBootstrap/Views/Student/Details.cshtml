@@ -1,0 +1,37 @@
+﻿@model MvcBootstrap.Models.Student
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<form class="form-horizontal" role="form">
+    <fieldset>
+        <legend>Student</legend>
+
+        <div class="form-group">
+            <label class="col-lg-2 control-label">@Html.DisplayNameFor(model => model.LastName)</label>
+            <div class="col-lg-10">
+                @Html.DisplayFor(model => model.LastName)
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label">@Html.DisplayNameFor(model => model.FirstMidName)</label>
+            <div class="col-lg-10">
+                @Html.DisplayFor(model => model.FirstMidName)
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label">@Html.DisplayNameFor(model => model.EnrollmentDate)</label>
+            <div class="col-lg-10">
+                @Html.DisplayFor(model => model.EnrollmentDate)
+            </div>
+        </div>
+    </fieldset>
+</form>
+
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.StudentID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
