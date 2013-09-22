@@ -20,8 +20,8 @@
             <li class="@(ViewBag.menu == HomeController.MENU ? "active" : null)">@Html.ActionLink("Home", "Index", "Home")</li>
             <li class="@(ViewBag.menu == StudentController.MENU ? "active" : null)">@Html.ActionLink("Students", "Index", "Student")</li>
         </ul>
-        @RenderBody()
     </div>
+    @RenderBody()
     @Scripts.Render("~/bundles/jquery")
     <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
     <script type="text/javascript" src="~/Scripts/respond.min.js"></script>

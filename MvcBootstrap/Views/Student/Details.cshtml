@@ -1,37 +1,65 @@
 ﻿@model MvcBootstrap.Models.Student
 
+@using MvcBootstrap.Models;
+
 @{
     ViewBag.Title = "Details";
 }
 
 <h2>Details</h2>
 
-<form class="form-horizontal" role="form">
-    <fieldset>
-        <legend>Student</legend>
+<div class="well">
+    <form class="form-horizontal" role="form">
+        <fieldset>
+            <legend>Student</legend>
 
-        <div class="form-group">
-            <label class="col-lg-2 control-label">@Html.DisplayNameFor(model => model.LastName)</label>
-            <div class="col-lg-10">
-                @Html.DisplayFor(model => model.LastName)
+            <div class="form-group">
+                <label class="col-lg-2 control-label">@Html.DisplayNameFor(model => model.LastName)</label>
+                <div class="col-lg-10">
+                    @Html.DisplayFor(model => model.LastName)
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="col-lg-2 control-label">@Html.DisplayNameFor(model => model.FirstMidName)</label>
-            <div class="col-lg-10">
-                @Html.DisplayFor(model => model.FirstMidName)
+            <div class="form-group">
+                <label class="col-lg-2 control-label">@Html.DisplayNameFor(model => model.FirstMidName)</label>
+                <div class="col-lg-10">
+                    @Html.DisplayFor(model => model.FirstMidName)
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="col-lg-2 control-label">@Html.DisplayNameFor(model => model.EnrollmentDate)</label>
-            <div class="col-lg-10">
-                @Html.DisplayFor(model => model.EnrollmentDate)
+            <div class="form-group">
+                <label class="col-lg-2 control-label">@Html.DisplayNameFor(model => model.EnrollmentDate)</label>
+                <div class="col-lg-10">
+                    @Html.DisplayFor(model => model.EnrollmentDate)
+                </div>
             </div>
-        </div>
-    </fieldset>
-</form>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">@Html.DisplayNameFor(model => model.Enrollments)</label>
+                <div class="col-lg-10">
+                    <table class="table table-striped table-hover table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Course Title</th>
+                                <th>Grade</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (Enrollment item in Model.Enrollments)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(x => item.Course.Title)</td>
+                                    <td>@Html.DisplayFor(x => item.Grade)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
 
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.StudentID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+<nav class="navbar navbar-default" role="navigation">
+    <ul class="nav navbar-nav">
+        <li><a href="@Url.Action("Edit", new { id = Model.StudentID })"><i class="glyphicon glyphicon-pencil"></i> Edit</a></li>
+        <li><a href="@Url.Action("Index")"><i class="glyphicon glyphicon-arrow-left"></i> Back to List</a></li>
+    </ul>
+</nav>

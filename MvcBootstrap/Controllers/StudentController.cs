@@ -52,14 +52,22 @@ namespace MvcBootstrap.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Student student)
+        public ActionResult Create([Bind(Include="LastName, FirstMidName, EnrollmentDate")] Student student)
         {
             ViewBag.menu = MENU;
-            if (ModelState.IsValid)
+            try
             {
-                db.Students.Add(student);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Students.Add(student);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+            }
+
+            catch (DataException)
+            {
+                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
 
             return View(student);
@@ -99,9 +107,12 @@ namespace MvcBootstrap.Controllers
         //
         // GET: /Student/Delete/5
 
-        public ActionResult Delete(int id = 0)
+        public ActionResult Delete(bool? saveChangesError = false, int id = 0)
         {
             ViewBag.menu = MENU;
+            if (saveChangesError.GetValueOrDefault())
+                ViewBag.ErrorMessage = "Delete failed. Try again, and if the problem persists see your system administrator.";
+
             Student student = db.Students.Find(id);
             if (student == null)
             {
@@ -115,12 +126,21 @@ namespace MvcBootstrap.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult Delete(int id)
         {
             ViewBag.menu = MENU;
-            Student student = db.Students.Find(id);
-            db.Students.Remove(student);
-            db.SaveChanges();
+            try
+            {
+                Student student = new Student { StudentID = id };
+                db.Entry(student).State = EntityState.Deleted;
+                db.SaveChanges();
+            }
+
+            catch (DataException)
+            {
+                return RedirectToAction("Delete", new { id = id, saveChangesError = true });
+            }
+
             return RedirectToAction("Index");
         }
 
