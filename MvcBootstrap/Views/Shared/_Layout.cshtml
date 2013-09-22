@@ -21,12 +21,13 @@
             <li class="@(ViewBag.menu == StudentController.MENU ? "active" : null)">@Html.ActionLink("Students", "Index", "Student")</li>
         </ul>
     </div>
-    @RenderBody()
     @Scripts.Render("~/bundles/jquery")
     <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
     <script type="text/javascript" src="~/Scripts/respond.min.js"></script>
     <script type="text/javascript" src="~/Scripts/angular.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/ui-bootstrap-tpls-0.6.0.min.js"></script>
     <script type="text/javascript" src="~/Scripts/app.js"></script>
+    @RenderBody()
     @RenderSection("scripts", required: false)
 </body>
 </html>

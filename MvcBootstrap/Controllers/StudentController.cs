@@ -1,12 +1,13 @@
-﻿using System;
+﻿using MvcBootstrap.Context;
+using MvcBootstrap.Models;
+using PagedList;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using MvcBootstrap.Models;
-using MvcBootstrap.Context;
 
 namespace MvcBootstrap.Controllers
 {
@@ -18,10 +19,52 @@ namespace MvcBootstrap.Controllers
         //
         // GET: /Student/
 
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
             ViewBag.menu = MENU;
-            return View(db.Students.ToList());
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NameSortParm = string.IsNullOrEmpty(sortOrder) ? "Name_desc" : "";
+            ViewBag.DateSortParm = sortOrder == "Date" ? "Date_desc" : "Date";
+
+            if (searchString != null)
+                page = 1;
+
+            else
+                searchString = currentFilter;
+
+            ViewBag.CurrentFilter = searchString;
+
+            var students = db.Students.Select(x => x);
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                students = students.Where(x => x.LastName.ToUpper().Contains(searchString.ToUpper()) ||
+                    x.FirstMidName.ToUpper().Contains(searchString.ToUpper()));
+            }
+
+            switch (sortOrder)
+            {
+                case "Name_desc":
+                    students = students.OrderByDescending(x => x.LastName);
+                    break;
+
+                case "Date":
+                    students = students.OrderBy(x => x.EnrollmentDate);
+                    break;
+
+                case "Date_desc":
+                    students = students.OrderByDescending(x => x.EnrollmentDate);
+                    break;
+
+                default:
+                    students = students.OrderBy(x => x.LastName);
+                    break;
+            }
+
+            int pageSize = 3;
+            int pageNumber = (page ?? 1);
+
+            return View(students.ToPagedList(pageNumber, pageSize));
         }
 
         //

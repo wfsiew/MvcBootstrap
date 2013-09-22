@@ -1,3 +1,5 @@
 ﻿.form-width {
     width: 90%;
 }
+
+.nav, .pagination, .carousel a { cursor: pointer; }

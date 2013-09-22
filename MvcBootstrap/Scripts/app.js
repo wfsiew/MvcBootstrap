@@ -2,7 +2,7 @@
 
 /* App Module */
 
-angular.module('mvcapp', []).
+angular.module('mvcapp', ['ui.bootstrap']).
     config(['$routeProvider', function ($routeProvider) {
 
     }]);
