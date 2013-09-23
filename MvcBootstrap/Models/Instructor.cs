@@ -7,29 +7,32 @@ using System.Web;
 
 namespace MvcBootstrap.Models
 {
-    public class Student
+    public class Instructor
     {
-        public int StudentID { get; set; }
+        public int InstructorID { get; set; }
 
+        [Required]
+        [Display(Name = "Last Name")]
         [StringLength(50)]
-        [MinLength(1)]
         public string LastName { get; set; }
 
-        [StringLength(50, ErrorMessage = "First name cannot be longer than 50 characters.")]
-        [MinLength(1)]
+        [Required]
         [Column("FirstName")]
+        [Display(Name = "First Name")]
+        [StringLength(50)]
         public string FirstMidName { get; set; }
 
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        [Display(Name = "Enrollment Date")]
-        public DateTime EnrollmentDate { get; set; }
+        [Display(Name = "Hire Date")]
+        public DateTime HireDate { get; set; }
 
         public string FullName
         {
             get { return LastName + ", " + FirstMidName; }
         }
 
-        public virtual ICollection<Enrollment> Enrollments { get; set; }
+        public virtual ICollection<Course> Courses { get; set; }
+        public virtual OfficeAssignment OfficeAssignment { get; set; }
     }
 }

@@ -6,10 +6,6 @@
     ViewBag.Title = "Students";
 }
 
-@section Scripts {
-    @Scripts.Render("~/Scripts/student.js")
-}
-
 <h2>Students</h2>
 
 <nav class="navbar navbar-default" role="navigation">
@@ -53,8 +49,8 @@
             <tr>
                 <td>
                     @Html.ActionLink("Edit", "Edit", new { id = item.StudentID }) |
-                @Html.ActionLink("Details", "Details", new { id = item.StudentID }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.StudentID })
+                    @Html.ActionLink("Details", "Details", new { id = item.StudentID }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.StudentID })
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.LastName)
@@ -72,6 +68,12 @@
 <br />
 Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
 
-<div ng-controller="StudentCtrl">
-    <pagination boundary-links="true" items-per-page="@Model.PageSize" total-items="@Model.TotalItemCount" page="@Model.PageNumber" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
-</div>
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }),
+new PagedListRenderOptions
+{
+    UlElementClasses = new string[] { "pagination" },
+    DisplayLinkToPreviousPage = PagedListDisplayMode.IfNeeded,
+    DisplayLinkToFirstPage = PagedListDisplayMode.IfNeeded,
+    DisplayLinkToNextPage = PagedListDisplayMode.IfNeeded,
+    DisplayLinkToLastPage = PagedListDisplayMode.IfNeeded
+})

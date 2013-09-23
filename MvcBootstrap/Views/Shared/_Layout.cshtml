@@ -18,7 +18,10 @@
     <div class="page-header">
         <ul class="nav nav-tabs nav-justified">
             <li class="@(ViewBag.menu == HomeController.MENU ? "active" : null)">@Html.ActionLink("Home", "Index", "Home")</li>
+            <li class="@(ViewBag.menu == "About" ? "active" : null)">@Html.ActionLink("About", "About", "Home")</li>
             <li class="@(ViewBag.menu == StudentController.MENU ? "active" : null)">@Html.ActionLink("Students", "Index", "Student")</li>
+            <li class="@(ViewBag.menu == CourseController.MENU ? "active" : null)">@Html.ActionLink("Courses", "index", "Course")</li>
+            <li class="@(ViewBag.menu == InstructorController.MENU ? "active" : null)">@Html.ActionLink("Instructors", "index", "Instructor")</li>
         </ul>
     </div>
     @Scripts.Render("~/bundles/jquery")
