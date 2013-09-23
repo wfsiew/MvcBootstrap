@@ -1,0 +1,58 @@
+﻿@model MvcBootstrap.Models.Department
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+<div class="well">
+@using (Html.BeginForm("Create", "Department", FormMethod.Post, new { name = "departmentform", @class = "form-horizontal form-width" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Department</legend>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, new { @class = "col-lg-2 control-label" })
+            <div class="col-lg-10">
+                @Html.TextBoxFor(model => model.Name, new { @class = "form-control", placeholder = "Name" })
+                @Html.ValidationMessageFor(model => model.Name,  "", new { @class = "label label-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Budget, new { @class = "col-lg-2 control-label" })
+            <div class="col-lg-10">
+                @Html.TextBoxFor(model => model.Budget, new { @class = "form-control", placeholder = "Budget" })
+                @Html.ValidationMessageFor(model => model.Budget,  "", new { @class = "label label-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.StartDate, new { @class = "col-lg-2 control-label" })
+            <div class="col-lg-10">
+                @Html.TextBoxFor(model => model.StartDate, new { @class = "form-control", placeholder = "Start Date" })
+                @Html.ValidationMessageFor(model => model.StartDate,  "", new { @class = "label label-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.InstructorID, new { @class = "col-lg-2 control-label" })
+            <div class="col-lg-10">
+                @Html.DropDownList("InstructorID", ViewBag.InstructorID as SelectList, String.Empty, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.InstructorID,  "", new { @class = "label label-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-offset-2 col-lg-10">
+                <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-floppy-disk"></i> Save</button>
+                <a class="btn btn-default" href="@Url.Action("Index")"><i class="glyphicon glyphicon-arrow-left"></i> Cancel</a>
+            </div>
+        </div>
+    </fieldset>
+}
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,12 +1,10 @@
-﻿@model IEnumerable<MvcBootstrap.Models.Course>
-
-@using PagedList.Mvc;
+﻿@model IEnumerable<MvcBootstrap.Models.Department>
 
 @{
-    ViewBag.Title = "Courses";
+    ViewBag.Title = "Departments";
 }
 
-<h2>Courses</h2>
+<h2>Departments</h2>
 
 <nav class="navbar navbar-default" role="navigation">
     <ul class="nav navbar-nav">
@@ -26,10 +24,10 @@
     <thead>
         <tr>
             <th></th>
-            <th>Number</th>
-            <th>Title</th>
-            <th>Credits</th>
-            <th>Department</th>
+            <th>Name</th>
+            <th>Budget</th>
+            <th>Start Date</th>
+            <th>Administrator</th>
         </tr>
     </thead>
     <tbody>
@@ -37,21 +35,21 @@
         {
             <tr>
                 <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.CourseID }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.CourseID }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.CourseID })
+                    @Html.ActionLink("Edit", "Edit", new { id = item.DepartmentID }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.DepartmentID }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.DepartmentID })
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CourseID)
+                    @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Title)
+                    @Html.DisplayFor(modelItem => item.Budget)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Credits)
+                    @Html.DisplayFor(modelItem => item.StartDate)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Department.Name)
+                    @Html.DisplayFor(modelItem => item.Administrator.FullName)
                 </td>
             </tr>
         }

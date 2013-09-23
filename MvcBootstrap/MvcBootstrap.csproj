@@ -148,6 +148,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Context\SchoolContext.cs" />
     <Compile Include="Controllers\CourseController.cs" />
+    <Compile Include="Controllers\DepartmentController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InstructorController.cs" />
     <Compile Include="Controllers\StudentController.cs" />
@@ -169,6 +170,10 @@
     <Compile Include="Migrations\201309230600184_Update_v3.cs" />
     <Compile Include="Migrations\201309230600184_Update_v3.Designer.cs">
       <DependentUpon>201309230600184_Update_v3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201309231455545_Update_RowVersion.cs" />
+    <Compile Include="Migrations\201309231455545_Update_RowVersion.Designer.cs">
+      <DependentUpon>201309231455545_Update_RowVersion.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Course.cs" />
@@ -302,6 +307,11 @@
     <Content Include="Views\Instructor\Create.cshtml" />
     <Content Include="Views\Instructor\Edit.cshtml" />
     <Content Include="Views\Instructor\Delete.cshtml" />
+    <Content Include="Views\Department\Index.cshtml" />
+    <Content Include="Views\Department\Details.cshtml" />
+    <Content Include="Views\Department\Create.cshtml" />
+    <Content Include="Views\Department\Edit.cshtml" />
+    <Content Include="Views\Department\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Abstract\" />
@@ -327,6 +337,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201309230600184_Update_v3.resx">
       <DependentUpon>201309230600184_Update_v3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201309231455545_Update_RowVersion.resx">
+      <DependentUpon>201309231455545_Update_RowVersion.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

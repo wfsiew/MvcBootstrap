@@ -22,6 +22,7 @@
             <li class="@(ViewBag.menu == StudentController.MENU ? "active" : null)">@Html.ActionLink("Students", "Index", "Student")</li>
             <li class="@(ViewBag.menu == CourseController.MENU ? "active" : null)">@Html.ActionLink("Courses", "index", "Course")</li>
             <li class="@(ViewBag.menu == InstructorController.MENU ? "active" : null)">@Html.ActionLink("Instructors", "index", "Instructor")</li>
+            <li class="@(ViewBag.menu == DepartmentController.MENU ? "active" : null)">@Html.ActionLink("Departments", "index", "Department")</li>
         </ul>
     </div>
     @Scripts.Render("~/bundles/jquery")

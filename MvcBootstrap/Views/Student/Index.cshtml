@@ -16,7 +16,10 @@
 
 @if (TempData["message"] != null)
 {
-    <div class="alert alert-success">@TempData["message"]</div>
+    <div class="alert alert-success alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        @TempData["message"]
+    </div>
 }
 
 @using (Html.BeginForm("Index", "Student", FormMethod.Get, new { @class = "form-horizontal" }))
