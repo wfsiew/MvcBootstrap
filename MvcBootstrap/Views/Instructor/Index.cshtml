@@ -14,6 +14,11 @@
     </ul>
 </nav>
 
+@if (TempData["message"] != null)
+{
+    <div class="alert alert-success">@TempData["message"]</div>
+}
+
 <table class="table table-striped table-hover table-condensed">
     <thead>
         <tr>
@@ -22,6 +27,7 @@
             <th>First Name</th>
             <th>Hire Date</th>
             <th>Office</th>
+            <th>Courses</th>
         </tr>
     </thead>
     <tbody>
@@ -52,6 +58,14 @@
                     @if (item.OfficeAssignment != null)
                     {
                         @item.OfficeAssignment.Location
+                    }
+                </td>
+                <td>
+                    @{
+                        foreach (Course course in item.Courses)
+                        {
+                            @course.CourseID @:  @course.Title <br />
+                        }
                     }
                 </td>
             </tr>

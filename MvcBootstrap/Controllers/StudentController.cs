@@ -78,6 +78,7 @@ namespace MvcBootstrap.Controllers
             {
                 return HttpNotFound();
             }
+
             return View(student);
         }
 
@@ -104,6 +105,7 @@ namespace MvcBootstrap.Controllers
                 {
                     db.Students.Add(student);
                     db.SaveChanges();
+                    TempData["message"] = string.Format("{0} has been saved", student.FullName);
                     return RedirectToAction("Index");
                 }
             }
@@ -127,6 +129,7 @@ namespace MvcBootstrap.Controllers
             {
                 return HttpNotFound();
             }
+
             return View(student);
         }
 
@@ -142,8 +145,10 @@ namespace MvcBootstrap.Controllers
             {
                 db.Entry(student).State = EntityState.Modified;
                 db.SaveChanges();
+                TempData["message"] = string.Format("{0} has been saved", student.FullName);
                 return RedirectToAction("Index");
             }
+
             return View(student);
         }
 
@@ -161,6 +166,7 @@ namespace MvcBootstrap.Controllers
             {
                 return HttpNotFound();
             }
+
             return View(student);
         }
 
@@ -177,6 +183,7 @@ namespace MvcBootstrap.Controllers
                 Student student = new Student { StudentID = id };
                 db.Entry(student).State = EntityState.Deleted;
                 db.SaveChanges();
+                TempData["message"] = "Student was deleted";
             }
 
             catch (DataException)

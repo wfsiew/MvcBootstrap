@@ -36,6 +36,7 @@ namespace MvcBootstrap.Controllers
             {
                 return HttpNotFound();
             }
+
             return View(course);
         }
 
@@ -63,6 +64,7 @@ namespace MvcBootstrap.Controllers
                 {
                     db.Courses.Add(course);
                     db.SaveChanges();
+                    TempData["message"] = string.Format("{0} has been saved", course.Title);
                     return RedirectToAction("Index");
                 }
             }
@@ -87,6 +89,7 @@ namespace MvcBootstrap.Controllers
             {
                 return HttpNotFound();
             }
+
             PopulateDepartmentsDropDownList(course.DepartmentID);
             return View(course);
         }
@@ -103,8 +106,10 @@ namespace MvcBootstrap.Controllers
             {
                 db.Entry(course).State = EntityState.Modified;
                 db.SaveChanges();
+                TempData["message"] = string.Format("{0} has been saved", course.Title);
                 return RedirectToAction("Index");
             }
+
             ViewBag.DepartmentID = new SelectList(db.Departments, "DepartmentID", "Name", course.DepartmentID);
             return View(course);
         }
@@ -120,6 +125,7 @@ namespace MvcBootstrap.Controllers
             {
                 return HttpNotFound();
             }
+
             return View(course);
         }
 
@@ -131,9 +137,10 @@ namespace MvcBootstrap.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             ViewBag.menu = MENU;
-            Course course = db.Courses.Find(id);
-            db.Courses.Remove(course);
+            Course course = new Course { CourseID = id };
+            db.Entry(course).State = EntityState.Deleted;
             db.SaveChanges();
+            TempData["message"] = "Course was deleted";
             return RedirectToAction("Index");
         }
 

@@ -6,38 +6,42 @@
 
 <h2>Details</h2>
 
-<fieldset>
-    <legend>Instructor</legend>
+<div class="well">
+    <form class="form-horizontal" role="form">
+        <fieldset>
+            <legend>Instructor</legend>
 
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.LastName)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.LastName)
-    </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.LastName, new { @class = "col-lg-2 control-label" })
+                <div class="col-lg-10">
+                    @Html.DisplayFor(model => model.LastName)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.FirstMidName, new { @class = "col-lg-2 control-label" })
+                <div class="col-lg-10">
+                    @Html.DisplayFor(model => model.FirstMidName)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.HireDate, new { @class = "col-lg-2 control-label" })
+                <div class="col-lg-10">
+                    @Html.DisplayFor(model => model.HireDate)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.FullName, new { @class = "col-lg-2 control-label" })
+                <div class="col-lg-10">
+                    @Html.DisplayFor(model => model.FullName)
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
 
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.FirstMidName)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.FirstMidName)
-    </div>
-
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.HireDate)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.HireDate)
-    </div>
-
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.FullName)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.FullName)
-    </div>
-</fieldset>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id=Model.InstructorID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+<nav class="navbar navbar-default" role="navigation">
+    <ul class="nav navbar-nav">
+        <li><a href="@Url.Action("Edit", new { id = Model.InstructorID })"><i class="glyphicon glyphicon-pencil"></i> Edit</a></li>
+        <li><a href="@Url.Action("Index")"><i class="glyphicon glyphicon-arrow-left"></i> Back to List</a></li>
+    </ul>
+</nav>

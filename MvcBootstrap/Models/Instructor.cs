@@ -27,6 +27,7 @@ namespace MvcBootstrap.Models
         [Display(Name = "Hire Date")]
         public DateTime HireDate { get; set; }
 
+        [Display(Name = "Full Name")]
         public string FullName
         {
             get { return LastName + ", " + FirstMidName; }
