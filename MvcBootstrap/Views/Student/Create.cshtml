@@ -7,7 +7,7 @@
 <h2>Create</h2>
 
 <div class="well">
-@using (Html.BeginForm("Create", "Student", FormMethod.Post, new { name = "studentform", @class = "form-horizontal form-width" }))
+@using (Html.BeginForm("Create", "Student", FormMethod.Post, new { name = "studentform", @class = "form-horizontal" }))
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)

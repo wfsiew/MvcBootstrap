@@ -15,21 +15,23 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <ul class="nav nav-tabs navbar-fixed-top">
-        <li class="@(ViewBag.menu == HomeController.MENU ? "active" : null)">@Html.ActionLink("Home", "Index", "Home")</li>
-        <li class="@(ViewBag.menu == "About" ? "active" : null)">@Html.ActionLink("About", "About", "Home")</li>
-        <li class="@(ViewBag.menu == StudentController.MENU ? "active" : null)">@Html.ActionLink("Students", "Index", "Student")</li>
-        <li class="@(ViewBag.menu == CourseController.MENU ? "active" : null)">@Html.ActionLink("Courses", "index", "Course")</li>
-        <li class="@(ViewBag.menu == InstructorController.MENU ? "active" : null)">@Html.ActionLink("Instructors", "index", "Instructor")</li>
-        <li class="@(ViewBag.menu == DepartmentController.MENU ? "active" : null)">@Html.ActionLink("Departments", "index", "Department")</li>
-    </ul>
+    <div class="navbar navbar-fixed-top" role="navigation">
+        <ul class="nav nav-pills ">
+            <li class="@(ViewBag.menu == HomeController.MENU ? "active" : null)">@Html.ActionLink("Home", "Index", "Home")</li>
+            <li class="@(ViewBag.menu == "About" ? "active" : null)">@Html.ActionLink("About", "About", "Home")</li>
+            <li class="@(ViewBag.menu == StudentController.MENU ? "active" : null)">@Html.ActionLink("Students", "Index", "Student")</li>
+            <li class="@(ViewBag.menu == CourseController.MENU ? "active" : null)">@Html.ActionLink("Courses", "index", "Course")</li>
+            <li class="@(ViewBag.menu == InstructorController.MENU ? "active" : null)">@Html.ActionLink("Instructors", "index", "Instructor")</li>
+            <li class="@(ViewBag.menu == DepartmentController.MENU ? "active" : null)">@Html.ActionLink("Departments", "index", "Department")</li>
+        </ul>
+    </div>
     @Scripts.Render("~/bundles/jquery")
     <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
     <script type="text/javascript" src="~/Scripts/respond.min.js"></script>
     <script type="text/javascript" src="~/Scripts/angular.min.js"></script>
     <script type="text/javascript" src="~/Scripts/ui-bootstrap-tpls-0.6.0.min.js"></script>
     <script type="text/javascript" src="~/Scripts/app.js"></script>
-    <div class="body">
+    <div class="content container">
     @RenderBody()
     </div>
     @RenderSection("scripts", required: false)
