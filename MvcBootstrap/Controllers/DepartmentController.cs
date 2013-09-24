@@ -22,7 +22,7 @@ namespace MvcBootstrap.Controllers
         public ActionResult Index()
         {
             ViewBag.menu = MENU;
-            var departments = db.Departments.Include(d => d.Administrator);
+            IQueryable<Department> departments = db.Departments.Include(d => d.Administrator);
             return View(departments.ToList());
         }
 
@@ -144,14 +144,30 @@ namespace MvcBootstrap.Controllers
         //
         // GET: /Department/Delete/5
 
-        public ActionResult Delete(int id = 0)
+        public ActionResult Delete(int id, bool? concurrencyError)
         {
             ViewBag.menu = MENU;
             Department department = db.Departments.Find(id);
-            if (department == null)
+            if (concurrencyError.GetValueOrDefault())
             {
-                return HttpNotFound();
+                if (department == null)
+                {
+                    ViewBag.ConcurrencyErrorMessage = "The record you attempted to delete "
+                        + "was deleted by another user after you got the original values. "
+                        + "Click the Back to List hyperlink.";
+                }
+
+                else
+                {
+                    ViewBag.ConcurrencyErrorMessage = "The record you attempted to delete "
+                        + "was modified by another user after you got the original values. "
+                        + "The delete operation was canceled and the current values in the "
+                        + "database have been displayed. If you still want to delete this "
+                        + "record, click the Delete button again. Otherwise "
+                        + "click the Back to List hyperlink.";
+                }
             }
+
             return View(department);
         }
 
@@ -160,14 +176,27 @@ namespace MvcBootstrap.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult Delete(Department department)
         {
             ViewBag.menu = MENU;
-            Department department = new Department { DepartmentID = id };
-            db.Entry(department).State = EntityState.Deleted;
-            db.SaveChanges();
-            TempData["message"] = "Department was deleted";
-            return RedirectToAction("Index");
+            try
+            {
+                db.Entry(department).State = EntityState.Deleted;
+                db.SaveChanges();
+                TempData["message"] = "Department was deleted";
+                return RedirectToAction("Index");
+            }
+
+            catch (DbUpdateConcurrencyException)
+            {
+                return RedirectToAction("Delete", new { concurrencyError = true });
+            }
+
+            catch (DataException)
+            {
+                ModelState.AddModelError(string.Empty, "Unable to delete. Try again, and if the problem persists contact your system administrator.");
+                return View(department);
+            }
         }
 
         protected override void Dispose(bool disposing)
