@@ -44,7 +44,8 @@
             <th>
                 @Html.ActionLink("Last Name", "Index", new { sortOrder = ViewBag.NameSortParm })
             </th>
-            <th>First Name
+            <th>
+                @Html.ActionLink("First Name", "Index", new { sortOrder = ViewBag.FirstNameSortParm })
             </th>
             <th>
                 @Html.ActionLink("Enrollment Date", "Index", new { sortOrder = ViewBag.DateSortParm })
@@ -56,11 +57,9 @@
         {
             <tr>
                 <td>
-                    <div class="btn-group btn-group-xs">
-                        @Html.ActionLink("Edit", "Edit", new { id = item.StudentID }, new { @class = "btn btn-default" })
-                        @Html.ActionLink("Details", "Details", new { id = item.StudentID }, new { @class = "btn btn-default" })
-                        @Html.ActionLink("Delete", "Delete", new { id = item.StudentID }, new { @class = "btn btn-default" })
-                    </div>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.StudentID })
+                    @Html.ActionLink("Details", "Details", new { id = item.StudentID })
+                    @Html.ActionLink("Delete", "Delete", new { id = item.StudentID })
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.LastName)
@@ -74,9 +73,15 @@
             </tr>
         }
     </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="4">
+                <span class="badge">Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount</span>
+            </td>
+        </tr>
+    </tfoot>
 </table>
 <br />
-<span class="label label-default">Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount</span>
 
 @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }),
 new PagedListRenderOptions

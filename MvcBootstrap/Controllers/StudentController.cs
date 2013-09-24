@@ -24,6 +24,7 @@ namespace MvcBootstrap.Controllers
             ViewBag.menu = MENU;
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = string.IsNullOrEmpty(sortOrder) ? "Name_desc" : "";
+            ViewBag.FirstNameSortParm = sortOrder == "FirstName" ? "FirstName_desc" : "FirstName";
             ViewBag.DateSortParm = sortOrder == "Date" ? "Date_desc" : "Date";
 
             if (searchString != null)
@@ -46,6 +47,14 @@ namespace MvcBootstrap.Controllers
             {
                 case "Name_desc":
                     students = students.OrderByDescending(x => x.LastName);
+                    break;
+
+                case "FirstName":
+                    students = students.OrderBy(x => x.FirstMidName);
+                    break;
+
+                case "FirstName_desc":
+                    students = students.OrderByDescending(x => x.FirstMidName);
                     break;
 
                 case "Date":
