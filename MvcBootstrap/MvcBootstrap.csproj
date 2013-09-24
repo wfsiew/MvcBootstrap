@@ -142,10 +142,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstract\IStudentRepository.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Concrete\GenericRepository.cs" />
+    <Compile Include="Concrete\StudentRepository.cs" />
+    <Compile Include="Concrete\UnitOfWork.cs" />
     <Compile Include="Context\SchoolContext.cs" />
     <Compile Include="Controllers\CourseController.cs" />
     <Compile Include="Controllers\DepartmentController.cs" />
@@ -322,9 +326,7 @@
     <Content Include="Views\Department\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Abstract\" />
     <Folder Include="App_Data\" />
-    <Folder Include="Concrete\" />
     <Folder Include="Infrastructure\" />
   </ItemGroup>
   <ItemGroup>
