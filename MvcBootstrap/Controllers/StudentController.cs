@@ -189,7 +189,7 @@ namespace MvcBootstrap.Controllers
             ViewBag.menu = MENU;
             try
             {
-                Student student = new Student { StudentID = id };
+                Student student = new Student { PersonID = id };
                 db.Entry(student).State = EntityState.Deleted;
                 db.SaveChanges();
                 TempData["message"] = "Student was deleted";

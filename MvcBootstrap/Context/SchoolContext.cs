@@ -16,6 +16,7 @@ namespace MvcBootstrap.Context
         public DbSet<Instructor> Instructors { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<OfficeAssignment> OfficeAssignments { get; set; }
+        public DbSet<Person> People { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -24,7 +25,7 @@ namespace MvcBootstrap.Context
             modelBuilder.Entity<Course>()
                 .HasMany(c => c.Instructors).WithMany(i => i.Courses)
                 .Map(t => t.MapLeftKey("CourseID")
-                    .MapRightKey("InstructorID")
+                    .MapRightKey("PersonID")
                     .ToTable("CourseInstructor"));
 
             modelBuilder.Entity<Instructor>()

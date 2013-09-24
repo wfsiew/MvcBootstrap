@@ -30,8 +30,8 @@ namespace MvcBootstrap.Controllers
 
             if (id != null)
             {
-                ViewBag.InstructorID = id.Value;
-                viewModel.Courses = viewModel.Instructors.Where(i => i.InstructorID == id.Value).Single().Courses;
+                ViewBag.PersonID = id.Value;
+                viewModel.Courses = viewModel.Instructors.Where(i => i.PersonID == id.Value).Single().Courses;
             }
 
             if (courseID != null)
@@ -64,7 +64,7 @@ namespace MvcBootstrap.Controllers
         public ActionResult Create()
         {
             ViewBag.menu = MENU;
-            ViewBag.InstructorID = new SelectList(db.OfficeAssignments, "InstructorID", "Location");
+            ViewBag.PersonID = new SelectList(db.OfficeAssignments, "PersonID", "Location");
             return View();
         }
 
@@ -84,7 +84,7 @@ namespace MvcBootstrap.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.InstructorID = new SelectList(db.OfficeAssignments, "InstructorID", "Location", instructor.InstructorID);
+            ViewBag.PersonID = new SelectList(db.OfficeAssignments, "PersonID", "Location", instructor.PersonID);
             return View(instructor);
         }
 
@@ -97,7 +97,7 @@ namespace MvcBootstrap.Controllers
             Instructor instructor = db.Instructors
                 .Include(i => i.OfficeAssignment)
                 .Include(i => i.Courses)
-                .Where(i => i.InstructorID == id)
+                .Where(i => i.PersonID == id)
                 .Single();
             if (instructor == null)
             {
@@ -119,7 +119,7 @@ namespace MvcBootstrap.Controllers
             Instructor instructorToUpdate = db.Instructors
                 .Include(i => i.OfficeAssignment)
                 .Include(i => i.Courses)
-                .Where(i => i.InstructorID == id)
+                .Where(i => i.PersonID == id)
                 .Single();
 
             if (TryUpdateModel(instructorToUpdate, "",
@@ -174,7 +174,7 @@ namespace MvcBootstrap.Controllers
             ViewBag.menu = MENU;
             Instructor instructor = db.Instructors
                 .Include(i => i.OfficeAssignment)
-                .Where(i => i.InstructorID == id)
+                .Where(i => i.PersonID == id)
                 .Single();
 
             instructor.OfficeAssignment = null;

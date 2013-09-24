@@ -40,10 +40,10 @@
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.InstructorID, new { @class = "col-lg-2 control-label" })
+            @Html.LabelFor(model => model.PersonID, new { @class = "col-lg-2 control-label" })
             <div class="col-lg-10">
-                @Html.DropDownList("InstructorID", ViewBag.InstructorID as SelectList, String.Empty, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.InstructorID,  "", new { @class = "label label-danger" })
+                @Html.DropDownList("PersonID", ViewBag.PersonID as SelectList, String.Empty, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.PersonID,  "", new { @class = "label label-danger" })
             </div>
         </div>
         <div class="form-group">
