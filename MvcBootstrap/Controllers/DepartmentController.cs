@@ -1,7 +1,9 @@
 ﻿using MvcBootstrap.Abstract;
 using MvcBootstrap.Concrete;
 using MvcBootstrap.Context;
+using MvcBootstrap.Helpers;
 using MvcBootstrap.Models;
+using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -26,11 +28,73 @@ namespace MvcBootstrap.Controllers
         //
         // GET: /Department/
 
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
             ViewBag.menu = MENU;
-            IQueryable<Department> departments = repository.GetDepartments().Include(d => d.Administrator);
-            return View(departments.ToList());
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NameSortParm = string.IsNullOrEmpty(sortOrder) ? "Name_desc" : "";
+            ViewBag.BudgetSortParm = sortOrder == "Budget" ? "Budget_desc" : "Budget";
+            ViewBag.DateSortParm = sortOrder == "Date" ? "Date_desc" : "Date";
+            ViewBag.AdminSortParm = sortOrder == "Admin" ? "Admin_desc" : "Admin";
+
+            string keyword = string.IsNullOrEmpty(searchString) ? null : searchString.ToUpper();
+
+            if (searchString != null)
+                page = 1;
+
+            else
+                searchString = currentFilter;
+
+            ViewBag.CurrentFilter = searchString;
+
+            var departments = repository.GetDepartments().Include(d => d.Administrator);
+
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                departments = departments.Where(x => x.Name.Contains(keyword) ||
+                    x.Administrator.FirstMidName.Contains(keyword) ||
+                    x.Administrator.LastName.Contains(keyword));
+            }
+
+            switch (sortOrder)
+            {
+                case "Name_desc":
+                    departments = departments.OrderByDescending(x => x.Name);
+                    break;
+
+                case "Budget":
+                    departments = departments.OrderBy(x => x.Budget);
+                    break;
+
+                case "Budget_desc":
+                    departments = departments.OrderByDescending(x => x.Budget);
+                    break;
+
+                case "Date":
+                    departments = departments.OrderBy(x => x.StartDate);
+                    break;
+
+                case "Date_desc":
+                    departments = departments.OrderByDescending(x => x.StartDate);
+                    break;
+
+                case "Admin":
+                    departments = departments.OrderBy(x => x.Administrator.LastName);
+                    break;
+
+                case "Admin_desc":
+                    departments = departments.OrderByDescending(x => x.Administrator.LastName);
+                    break;
+
+                default:
+                    departments = departments.OrderBy(x => x.Name);
+                    break;
+            }
+
+            int pageSize = Constants.PAGE_SIZE;
+            int pageNumber = (page ?? 1);
+
+            return View(departments.ToPagedList(pageNumber, pageSize));
         }
 
         //
