@@ -14,9 +14,9 @@ namespace MvcBootstrap.Concrete
         private bool disposed = false;
         private SchoolContext context;
 
-        public StudentRepository(SchoolContext context)
+        public StudentRepository()
         {
-            this.context = context;
+            this.context = new SchoolContext();
         }
 
         public SchoolContext Context

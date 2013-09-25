@@ -165,6 +165,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\Constants.cs" />
+    <Compile Include="Infrastructure\NinjectControllerFactory.cs" />
     <Compile Include="Migrations\201309220854427_InitialCreate.cs" />
     <Compile Include="Migrations\201309220854427_InitialCreate.Designer.cs">
       <DependentUpon>201309220854427_InitialCreate.cs</DependentUpon>
@@ -333,7 +335,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Infrastructure\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

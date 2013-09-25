@@ -1,7 +1,9 @@
 ﻿using MvcBootstrap.Abstract;
 using MvcBootstrap.Concrete;
 using MvcBootstrap.Context;
+using MvcBootstrap.Helpers;
 using MvcBootstrap.Models;
+using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -17,11 +19,6 @@ namespace MvcBootstrap.Controllers
         public const string MENU = "Course";
         private ICourseRepository repository;
 
-        public CourseController()
-        {
-            this.repository = new CourseRepository(new SchoolContext());
-        }
-
         public CourseController(ICourseRepository repository)
         {
             this.repository = repository;
@@ -30,11 +27,72 @@ namespace MvcBootstrap.Controllers
         //
         // GET: /Course/
 
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
             ViewBag.menu = MENU;
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.TitleSortParm = string.IsNullOrEmpty(sortOrder) ? "Title_desc" : "";
+            ViewBag.DeptSortParm = sortOrder == "Dept" ? "Dept_desc" : "Dept";
+            ViewBag.CourseIDSortParm = sortOrder == "CourseID" ? "CourseID_desc" : "CourseID";
+            ViewBag.CreditsSortParm = sortOrder == "Credits" ? "Credits_desc" : "Credits";
+
+            string keyword = string.IsNullOrEmpty(searchString) ? null : searchString.ToUpper();
+
+            if (searchString != null)
+                page = 1;
+
+            else
+                searchString = currentFilter;
+
+            ViewBag.CurrentFilter = searchString;
+
             var courses = repository.GetCourses().Include(c => c.Department);
-            return View(courses.ToList());
+
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                courses = courses.Where(x => x.Title.Contains(keyword) ||
+                    x.Department.Name.Contains(keyword));
+            }
+
+            switch (sortOrder)
+            {
+                case "Title_desc":
+                    courses = courses.OrderByDescending(x => x.Title);
+                    break;
+
+                case "Dept":
+                    courses = courses.OrderBy(x => x.Department.Name);
+                    break;
+
+                case "Dept_desc":
+                    courses = courses.OrderByDescending(x => x.Department.Name);
+                    break;
+
+                case "CourseID":
+                    courses = courses.OrderBy(x => x.CourseID);
+                    break;
+
+                case "CourseID_desc":
+                    courses = courses.OrderByDescending(x => x.CourseID);
+                    break;
+
+                case "Credits":
+                    courses = courses.OrderBy(x => x.Credits);
+                    break;
+
+                case "Credits_desc":
+                    courses = courses.OrderByDescending(x => x.Credits);
+                    break;
+
+                default:
+                    courses = courses.OrderBy(x => x.Title);
+                    break;
+            }
+
+            int pageSize = Constants.PAGE_SIZE;
+            int pageNumber = (page ?? 1);
+
+            return View(courses.ToPagedList(pageNumber, pageSize));
         }
 
         //

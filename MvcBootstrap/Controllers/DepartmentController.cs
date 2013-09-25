@@ -18,11 +18,6 @@ namespace MvcBootstrap.Controllers
         public const string MENU = "Department";
         private IDepartmentRepository repository;
 
-        public DepartmentController()
-        {
-            this.repository = new DepartmentRepository(new SchoolContext());
-        }
-
         public DepartmentController(IDepartmentRepository repository)
         {
             this.repository = repository;

@@ -1,8 +1,10 @@
 ﻿using MvcBootstrap.Abstract;
 using MvcBootstrap.Concrete;
 using MvcBootstrap.Context;
+using MvcBootstrap.Helpers;
 using MvcBootstrap.Models;
 using MvcBootstrap.ViewModels;
+using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -18,11 +20,6 @@ namespace MvcBootstrap.Controllers
         public const string MENU = "Instructor";
         private IInstructorRepository repository;
 
-        public InstructorController()
-        {
-            this.repository = new InstructorRepository(new SchoolContext());
-        }
-
         public InstructorController(IInstructorRepository repository)
         {
             this.repository = repository;
@@ -31,14 +28,36 @@ namespace MvcBootstrap.Controllers
         //
         // GET: /Instructor/
 
-        public ActionResult Index(int? id, int? courseID)
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page, int? id, int? courseID)
         {
             ViewBag.menu = MENU;
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NameSortParm = string.IsNullOrEmpty(sortOrder) ? "Name_desc" : "";
+            ViewBag.FirstNameSortParm = sortOrder == "FirstName" ? "FirstName_desc" : "FirstName";
+            ViewBag.DateSortParm = sortOrder == "Date" ? "Date_desc" : "Date";
+            ViewBag.LocationSortParm = sortOrder == "Loc" ? "Loc_desc" : "Loc";
+
+            string keyword = string.IsNullOrEmpty(searchString) ? null : searchString.ToUpper();
+
             InstructorIndexData viewModel = new InstructorIndexData();
-            viewModel.Instructors = repository.GetInstructors()
+
+            if (searchString != null)
+                page = 1;
+
+            else
+                searchString = currentFilter;
+
+            ViewBag.CurrentFilter = searchString;
+
+            var instructors = repository.GetInstructors()
                 .Include(i => i.OfficeAssignment)
-                .Include(i => i.Courses.Select(x => x.Department))
-                .OrderBy(i => i.LastName);
+                .Include(i => i.Courses.Select(x => x.Department));
+
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                instructors = instructors.Where(x => x.LastName.ToUpper().Contains(keyword) ||
+                    x.FirstMidName.ToUpper().Contains(keyword));
+            }
 
             if (id != null)
             {
@@ -51,6 +70,46 @@ namespace MvcBootstrap.Controllers
                 ViewBag.CourseID = courseID.Value;
                 viewModel.Enrollments = viewModel.Courses.Where(x => x.CourseID == courseID).Single().Enrollments;
             }
+
+            switch (sortOrder)
+            {
+                case "Name_desc":
+                    instructors = instructors.OrderByDescending(x => x.LastName);
+                    break;
+
+                case "FirstName":
+                    instructors = instructors.OrderBy(x => x.FirstMidName);
+                    break;
+
+                case "FirstName_desc":
+                    instructors = instructors.OrderByDescending(x => x.FirstMidName);
+                    break;
+
+                case "Date":
+                    instructors = instructors.OrderBy(x => x.HireDate);
+                    break;
+
+                case "Date_desc":
+                    instructors = instructors.OrderByDescending(x => x.HireDate);
+                    break;
+
+                case "Loc":
+                    instructors = instructors.OrderBy(x => x.OfficeAssignment.Location);
+                    break;
+
+                case "Loc_desc":
+                    instructors = instructors.OrderByDescending(x => x.OfficeAssignment.Location);
+                    break;
+
+                default:
+                    instructors = instructors.OrderBy(x => x.LastName);
+                    break;
+            }
+
+            int pageSize = Constants.PAGE_SIZE;
+            int pageNumber = (page ?? 1);
+
+            viewModel.Instructors = instructors.ToPagedList(pageNumber, pageSize);
 
             return View(viewModel);
         }

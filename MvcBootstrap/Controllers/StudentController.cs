@@ -1,6 +1,7 @@
 ﻿using MvcBootstrap.Abstract;
 using MvcBootstrap.Concrete;
 using MvcBootstrap.Context;
+using MvcBootstrap.Helpers;
 using MvcBootstrap.Models;
 using PagedList;
 using System;
@@ -16,11 +17,6 @@ namespace MvcBootstrap.Controllers
     {
         public const string MENU = "Student";
         private IStudentRepository repository;
-
-        public StudentController()
-        {
-            this.repository = new StudentRepository(new SchoolContext());
-        }
 
         public StudentController(IStudentRepository repository)
         {
@@ -38,6 +34,8 @@ namespace MvcBootstrap.Controllers
             ViewBag.FirstNameSortParm = sortOrder == "FirstName" ? "FirstName_desc" : "FirstName";
             ViewBag.DateSortParm = sortOrder == "Date" ? "Date_desc" : "Date";
 
+            string keyword = string.IsNullOrEmpty(searchString) ? null : searchString.ToUpper();
+
             if (searchString != null)
                 page = 1;
 
@@ -48,10 +46,10 @@ namespace MvcBootstrap.Controllers
 
             var students = repository.GetStudents();
 
-            if (!string.IsNullOrEmpty(searchString))
+            if (!string.IsNullOrEmpty(keyword))
             {
-                students = students.Where(x => x.LastName.ToUpper().Contains(searchString.ToUpper()) ||
-                    x.FirstMidName.ToUpper().Contains(searchString.ToUpper()));
+                students = students.Where(x => x.LastName.ToUpper().Contains(keyword) ||
+                    x.FirstMidName.ToUpper().Contains(keyword));
             }
 
             switch (sortOrder)
@@ -81,7 +79,7 @@ namespace MvcBootstrap.Controllers
                     break;
             }
 
-            int pageSize = 10;
+            int pageSize = Constants.PAGE_SIZE;
             int pageNumber = (page ?? 1);
 
             return View(students.ToPagedList(pageNumber, pageSize));
