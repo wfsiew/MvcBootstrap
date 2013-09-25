@@ -143,6 +143,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstract\ICourseRepository.cs" />
+    <Compile Include="Abstract\IDepartmentRepository.cs" />
     <Compile Include="Abstract\IInstructorRepository.cs" />
     <Compile Include="Abstract\IStudentRepository.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -150,6 +151,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Concrete\CourseRepository.cs" />
+    <Compile Include="Concrete\DepartmentRepository.cs" />
     <Compile Include="Concrete\GenericRepository.cs" />
     <Compile Include="Concrete\InstructorRepository.cs" />
     <Compile Include="Concrete\StudentRepository.cs" />

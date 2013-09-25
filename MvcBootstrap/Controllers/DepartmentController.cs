@@ -1,4 +1,6 @@
-﻿using MvcBootstrap.Context;
+﻿using MvcBootstrap.Abstract;
+using MvcBootstrap.Concrete;
+using MvcBootstrap.Context;
 using MvcBootstrap.Models;
 using System;
 using System.Collections.Generic;
@@ -14,7 +16,17 @@ namespace MvcBootstrap.Controllers
     public class DepartmentController : Controller
     {
         public const string MENU = "Department";
-        private SchoolContext db = new SchoolContext();
+        private IDepartmentRepository repository;
+
+        public DepartmentController()
+        {
+            this.repository = new DepartmentRepository(new SchoolContext());
+        }
+
+        public DepartmentController(IDepartmentRepository repository)
+        {
+            this.repository = repository;
+        }
 
         //
         // GET: /Department/
@@ -22,7 +34,7 @@ namespace MvcBootstrap.Controllers
         public ActionResult Index()
         {
             ViewBag.menu = MENU;
-            IQueryable<Department> departments = db.Departments.Include(d => d.Administrator);
+            IQueryable<Department> departments = repository.GetDepartments().Include(d => d.Administrator);
             return View(departments.ToList());
         }
 
@@ -32,7 +44,7 @@ namespace MvcBootstrap.Controllers
         public ActionResult Details(int id = 0)
         {
             ViewBag.menu = MENU;
-            Department department = db.Departments.Find(id);
+            Department department = repository.GetByID(id);
             if (department == null)
             {
                 return HttpNotFound();
@@ -47,7 +59,7 @@ namespace MvcBootstrap.Controllers
         public ActionResult Create()
         {
             ViewBag.menu = MENU;
-            ViewBag.PersonID = new SelectList(db.Instructors, "PersonID", "FullName");
+            PopulateInstructorsDropDownList();
             return View();
         }
 
@@ -61,13 +73,13 @@ namespace MvcBootstrap.Controllers
             ViewBag.menu = MENU;
             if (ModelState.IsValid)
             {
-                db.Departments.Add(department);
-                db.SaveChanges();
+                repository.Insert(department);
+                repository.Save();
                 TempData["message"] = string.Format("{0} has been saved", department.Name);
                 return RedirectToAction("Index");
             }
 
-            ViewBag.PersonID = new SelectList(db.Instructors, "PersonID", "FullName", department.PersonID);
+            PopulateInstructorsDropDownList(department.PersonID);
             return View(department);
         }
 
@@ -77,13 +89,13 @@ namespace MvcBootstrap.Controllers
         public ActionResult Edit(int id = 0)
         {
             ViewBag.menu = MENU;
-            Department department = db.Departments.Find(id);
+            Department department = repository.GetByID(id);
             if (department == null)
             {
                 return HttpNotFound();
             }
 
-            ViewBag.PersonID = new SelectList(db.Instructors, "PersonID", "FullName", department.PersonID);
+            PopulateInstructorsDropDownList(department.PersonID);
             return View(department);
         }
 
@@ -99,8 +111,8 @@ namespace MvcBootstrap.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    db.Entry(department).State = EntityState.Modified;
-                    db.SaveChanges();
+                    repository.Update(department);
+                    repository.Save();
                     TempData["message"] = string.Format("{0} has been saved", department.Name);
                     return RedirectToAction("Index");
                 }
@@ -123,7 +135,7 @@ namespace MvcBootstrap.Controllers
                         + String.Format("{0:d}", databaseValues.StartDate));
                 if (databaseValues.PersonID != clientValues.PersonID)
                     ModelState.AddModelError("PersonID", "Current value: "
-                        + db.Instructors.Find(databaseValues.PersonID).FullName);
+                        + repository.Context.Instructors.Find(databaseValues.PersonID).FullName);
                 ModelState.AddModelError(string.Empty, "The record you attempted to edit "
                     + "was modified by another user after you got the original value. The "
                     + "edit operation was canceled and the current values in the database "
@@ -137,7 +149,7 @@ namespace MvcBootstrap.Controllers
                 ModelState.AddModelError(string.Empty, "Unable to save changes. Try again, and if the problem persists contact your system administrator.");
             }
 
-            ViewBag.PersonID = new SelectList(db.Instructors, "PersonID", "FullName", department.PersonID);
+            PopulateInstructorsDropDownList(department.PersonID);
             return View(department);
         }
 
@@ -147,7 +159,7 @@ namespace MvcBootstrap.Controllers
         public ActionResult Delete(int id, bool? concurrencyError)
         {
             ViewBag.menu = MENU;
-            Department department = db.Departments.Find(id);
+            Department department = repository.GetByID(id);
             if (concurrencyError.GetValueOrDefault())
             {
                 if (department == null)
@@ -181,8 +193,8 @@ namespace MvcBootstrap.Controllers
             ViewBag.menu = MENU;
             try
             {
-                db.Entry(department).State = EntityState.Deleted;
-                db.SaveChanges();
+                repository.Delete(department);
+                repository.Save();
                 TempData["message"] = "Department was deleted";
                 return RedirectToAction("Index");
             }
@@ -201,8 +213,14 @@ namespace MvcBootstrap.Controllers
 
         protected override void Dispose(bool disposing)
         {
-            db.Dispose();
+            repository.Dispose();
             base.Dispose(disposing);
+        }
+
+        private void PopulateInstructorsDropDownList(object selectedInstructor = null)
+        {
+            IOrderedQueryable<Instructor> instructorsQuery = repository.Context.Instructors.OrderBy(x => x.LastName);
+            ViewBag.PersonID = new SelectList(instructorsQuery, "PersonID", "FullName", selectedInstructor);
         }
     }
 }

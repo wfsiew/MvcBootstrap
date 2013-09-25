@@ -6,38 +6,42 @@
 
 <h2>Details</h2>
 
-<fieldset>
-    <legend>Department</legend>
+<div class="well">
+    <form class="form-horizontal" role="form">
+        <fieldset>
+            <legend>Department</legend>
 
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.Name)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Name)
-    </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Name, new { @class = "col-lg-2 control-label" })
+                <div class="col-lg-10">
+                    @Html.DisplayFor(model => model.Name)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Budget, new { @class = "col-lg-2 control-label" })
+                <div class="col-lg-10">
+                    @Html.DisplayFor(model => model.Budget)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.StartDate, new { @class = "col-lg-2 control-label" })
+                <div class="col-lg-10">
+                    @Html.DisplayFor(model => model.StartDate)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Administrator.LastName, new { @class = "col-lg-2 control-label" })
+                <div class="col-lg-10">
+                    @Html.DisplayFor(model => model.Administrator.LastName)
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
 
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.Budget)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Budget)
-    </div>
-
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.StartDate)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.StartDate)
-    </div>
-
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.Administrator.LastName)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Administrator.LastName)
-    </div>
-</fieldset>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id=Model.DepartmentID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+<nav class="navbar navbar-default" role="navigation">
+    <ul class="nav navbar-nav">
+        <li><a href="@Url.Action("Edit", new { id = Model.DepartmentID })"><i class="glyphicon glyphicon-pencil"></i> Edit</a></li>
+        <li><a href="@Url.Action("Index")"><i class="glyphicon glyphicon-arrow-left"></i> Back to List</a></li>
+    </ul>
+</nav>
