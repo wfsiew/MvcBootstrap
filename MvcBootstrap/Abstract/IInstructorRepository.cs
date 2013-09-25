@@ -13,7 +13,7 @@ namespace MvcBootstrap.Abstract
         SchoolContext Context { get; }
         IQueryable<Instructor> GetInstructors();
         Instructor GetByID(int id);
-        void Insert(Instructor instructor);
+        void Insert(Instructor instructor, string[] selectedCourses);
         void Delete(int id);
         void Update(Instructor instructor, string[] selectedCourses);
         void Save();

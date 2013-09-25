@@ -1,5 +1,7 @@
 ﻿@model MvcBootstrap.Models.Course
 
+@using MvcBootstrap.Helpers;
+
 @{
     ViewBag.Title = "Create";
 }
@@ -18,21 +20,21 @@
         <div class="form-group">
             @Html.LabelFor(model => model.CourseID, new { @class = "col-lg-2 control-label" })
             <div class="col-lg-10">
-                @Html.TextBoxFor(model => model.CourseID, new { @class = "form-control", placeholder = "Number" })
+                @Html.TextBoxFor(model => model.CourseID, HtmlHelpers.TextBoxAttributes("Number"))
                 @Html.ValidationMessageFor(model => model.CourseID, "", new { @class = "label label-danger" })
             </div>
         </div>
         <div class="form-group">
             @Html.LabelFor(model => model.Title, new { @class = "col-lg-2 control-label" })
             <div class="col-lg-10">
-                @Html.TextBoxFor(model => model.Title, new { @class = "form-control", placeholder = "Title" })
+                @Html.TextBoxFor(model => model.Title, HtmlHelpers.TextBoxAttributes("Title"))
                 @Html.ValidationMessageFor(model => model.Title, "", new { @class = "label label-danger" })
             </div>
         </div>
         <div class="form-group">
             @Html.LabelFor(model => model.Credits, new { @class = "col-lg-2 control-label" })
             <div class="col-lg-10">
-                @Html.TextBoxFor(model => model.Credits, new { @class = "form-control", placeholder = "Credits" })
+                @Html.TextBoxFor(model => model.Credits, HtmlHelpers.TextBoxAttributes("Credits"))
                 @Html.ValidationMessageFor(model => model.Credits, "", new { @class = "label label-danger" })
             </div>
         </div>

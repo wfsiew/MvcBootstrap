@@ -38,8 +38,9 @@ namespace MvcBootstrap.Concrete
             return context.Instructors.Find(id);
         }
 
-        public void Insert(Instructor instructor)
+        public void Insert(Instructor instructor, string[] selectedCourses)
         {
+            UpdateInstructorCourses(selectedCourses, instructor);
             context.Instructors.Add(instructor);
         }
 
@@ -94,6 +95,9 @@ namespace MvcBootstrap.Concrete
                 instructorToUpdate.Courses = new List<Course>();
                 return;
             }
+
+            if (instructorToUpdate.Courses == null)
+                instructorToUpdate.Courses = new List<Course>();
 
             HashSet<string> selectedCoursesHS = new HashSet<string>(selectedCourses);
             HashSet<int> instructorCourses = new HashSet<int>

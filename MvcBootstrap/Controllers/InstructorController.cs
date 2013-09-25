@@ -62,7 +62,7 @@ namespace MvcBootstrap.Controllers
             if (id != null)
             {
                 ViewBag.PersonID = id.Value;
-                viewModel.Courses = viewModel.Instructors.Where(i => i.PersonID == id.Value).Single().Courses;
+                viewModel.Courses = instructors.Where(i => i.PersonID == id.Value).Single().Courses;
             }
 
             if (courseID != null)
@@ -135,7 +135,8 @@ namespace MvcBootstrap.Controllers
         public ActionResult Create()
         {
             ViewBag.menu = MENU;
-            ViewBag.PersonID = new SelectList(repository.Context.OfficeAssignments, "PersonID", "Location");
+            PopulateInstructorsDropDownList();
+            PopulateAssignedCourseData();
             return View();
         }
 
@@ -144,18 +145,22 @@ namespace MvcBootstrap.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Instructor instructor)
+        public ActionResult Create(Instructor instructor, FormCollection fc, string[] selectedCourses)
         {
             ViewBag.menu = MENU;
-            if (ModelState.IsValid)
+
+            if (TryUpdateModel(instructor, "",
+                new string[] { "LastName", "FirstMidName", "HireDate", "OfficeAssignment" }))
             {
-                repository.Insert(instructor);
+                repository.Insert(instructor, selectedCourses);
                 repository.Save();
                 TempData["message"] = string.Format("{0} has been saved", instructor.FullName);
+
                 return RedirectToAction("Index");
             }
 
-            ViewBag.PersonID = new SelectList(repository.Context.OfficeAssignments, "PersonID", "Location", instructor.PersonID);
+            PopulateInstructorsDropDownList(instructor.PersonID);
+            PopulateAssignedCourseData();
             return View(instructor);
         }
 
@@ -250,10 +255,19 @@ namespace MvcBootstrap.Controllers
             base.Dispose(disposing);
         }
 
-        private void PopulateAssignedCourseData(Instructor instructor)
+        private void PopulateInstructorsDropDownList(object selectedInstructor = null)
+        {
+            ViewBag.PersonID = new SelectList(repository.Context.OfficeAssignments, "PersonID", "Location", selectedInstructor);
+        }
+
+        private void PopulateAssignedCourseData(Instructor instructor = null)
         {
             DbSet<Course> allCourses = repository.Context.Courses;
-            HashSet<int> instructorCourses = new HashSet<int>(instructor.Courses.Select(c => c.CourseID));
+            HashSet<int> instructorCourses = null;
+
+            if (instructor != null)
+                instructorCourses = new HashSet<int>(instructor.Courses.Select(c => c.CourseID));
+
             List<AssignedCourseData> viewModel = new List<AssignedCourseData>();
             foreach (Course course in allCourses)
             {
@@ -261,7 +275,7 @@ namespace MvcBootstrap.Controllers
                 {
                     CourseID = course.CourseID,
                     Title = course.Title,
-                    Assigned = instructorCourses.Contains(course.CourseID)
+                    Assigned = instructor == null ? false : instructorCourses.Contains(course.CourseID)
                 });
             }
 
