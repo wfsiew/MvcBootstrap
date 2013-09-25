@@ -1,5 +1,7 @@
 ﻿@model MvcBootstrap.Models.Instructor
 
+@using MvcBootstrap.Helpers;
+
 @{
     ViewBag.Title = "Details";
 }
@@ -12,19 +14,19 @@
             <legend>Instructor</legend>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.LastName, new { @class = "col-lg-2 control-label" })
+                @Html.LabelFor(model => model.LastName, HtmlHelpers.LabelAttributes())
                 <div class="col-lg-10">
                     @Html.DisplayFor(model => model.LastName)
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.FirstMidName, new { @class = "col-lg-2 control-label" })
+                @Html.LabelFor(model => model.FirstMidName, HtmlHelpers.LabelAttributes())
                 <div class="col-lg-10">
                     @Html.DisplayFor(model => model.FirstMidName)
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.HireDate, new { @class = "col-lg-2 control-label" })
+                @Html.LabelFor(model => model.HireDate, HtmlHelpers.LabelAttributes())
                 <div class="col-lg-10">
                     @Html.DisplayFor(model => model.HireDate)
                 </div>

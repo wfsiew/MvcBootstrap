@@ -18,28 +18,28 @@
         <legend>Instructor</legend>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.LastName, new { @class = "col-lg-2 control-label" })
+            @Html.LabelFor(model => model.LastName, HtmlHelpers.LabelAttributes())
             <div class="col-lg-10">
                 @Html.TextBoxFor(model => model.LastName, HtmlHelpers.TextBoxAttributes("Last Name"))
                 @Html.ValidationMessageFor(model => model.LastName,  "", new { @class = "label label-danger" })
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.FirstMidName, new { @class = "col-lg-2 control-label" })
+            @Html.LabelFor(model => model.FirstMidName, HtmlHelpers.LabelAttributes())
             <div class="col-lg-10">
                 @Html.TextBoxFor(model => model.FirstMidName, HtmlHelpers.TextBoxAttributes("First Name"))
                 @Html.ValidationMessageFor(model => model.FirstMidName,  "", new { @class = "label label-danger" })
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.HireDate, new { @class = "col-lg-2 control-label" })
+            @Html.LabelFor(model => model.HireDate, HtmlHelpers.LabelAttributes())
             <div class="col-lg-10">
                 @Html.TextBoxFor(model => model.HireDate, HtmlHelpers.TextBoxAttributes("Hire Date"))
                 @Html.ValidationMessageFor(model => model.HireDate,  "", new { @class = "label label-danger" })
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.OfficeAssignment.Location, new { @class = "col-lg-2 control-label" })
+            @Html.LabelFor(model => model.OfficeAssignment.Location, HtmlHelpers.LabelAttributes())
             <div class="col-lg-10">
                 @Html.TextBoxFor(model => model.OfficeAssignment.Location, HtmlHelpers.TextBoxAttributes("Office Location"))
                 @Html.ValidationMessageFor(model => model.OfficeAssignment.Location,  "", new { @class = "label label-danger" })

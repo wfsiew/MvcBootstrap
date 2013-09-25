@@ -18,28 +18,28 @@
         <legend>Department</legend>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Name, new { @class = "col-lg-2 control-label" })
+            @Html.LabelFor(model => model.Name, HtmlHelpers.LabelAttributes())
             <div class="col-lg-10">
                 @Html.TextBoxFor(model => model.Name, HtmlHelpers.TextBoxAttributes("Name"))
                 @Html.ValidationMessageFor(model => model.Name,  "", new { @class = "label label-danger" })
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.Budget, new { @class = "col-lg-2 control-label" })
+            @Html.LabelFor(model => model.Budget, HtmlHelpers.LabelAttributes())
             <div class="col-lg-10">
                 @Html.TextBoxFor(model => model.Budget, HtmlHelpers.TextBoxAttributes("Budget"))
                 @Html.ValidationMessageFor(model => model.Budget,  "", new { @class = "label label-danger" })
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.StartDate, new { @class = "col-lg-2 control-label" })
+            @Html.LabelFor(model => model.StartDate, HtmlHelpers.LabelAttributes())
             <div class="col-lg-10">
                 @Html.TextBoxFor(model => model.StartDate, HtmlHelpers.TextBoxAttributes("Start Date"))
                 @Html.ValidationMessageFor(model => model.StartDate,  "", new { @class = "label label-danger" })
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.PersonID, new { @class = "col-lg-2 control-label" })
+            @Html.LabelFor(model => model.PersonID, HtmlHelpers.LabelAttributes())
             <div class="col-lg-10">
                 @Html.DropDownList("PersonID", ViewBag.PersonID as SelectList, String.Empty, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.PersonID,  "", new { @class = "label label-danger" })
