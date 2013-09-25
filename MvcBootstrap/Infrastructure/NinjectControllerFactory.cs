@@ -29,7 +29,7 @@ namespace MvcBootstrap.Infrastructure
         {
             ninjectKernel.Bind<ICourseRepository>().To<CourseRepository>();
             ninjectKernel.Bind<IDepartmentRepository>().To<DepartmentRepository>();
-            ninjectKernel.Bind<IInstructorRepository>().To<IInstructorRepository>();
+            ninjectKernel.Bind<IInstructorRepository>().To<InstructorRepository>();
             ninjectKernel.Bind<IStudentRepository>().To<StudentRepository>();
         }
     }
