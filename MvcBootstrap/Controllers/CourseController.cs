@@ -1,4 +1,6 @@
-﻿using MvcBootstrap.Context;
+﻿using MvcBootstrap.Abstract;
+using MvcBootstrap.Concrete;
+using MvcBootstrap.Context;
 using MvcBootstrap.Models;
 using System;
 using System.Collections.Generic;
@@ -13,7 +15,17 @@ namespace MvcBootstrap.Controllers
     public class CourseController : Controller
     {
         public const string MENU = "Course";
-        private SchoolContext db = new SchoolContext();
+        private ICourseRepository repository;
+
+        public CourseController()
+        {
+            this.repository = new CourseRepository(new SchoolContext());
+        }
+
+        public CourseController(ICourseRepository repository)
+        {
+            this.repository = repository;
+        }
 
         //
         // GET: /Course/
@@ -21,7 +33,7 @@ namespace MvcBootstrap.Controllers
         public ActionResult Index()
         {
             ViewBag.menu = MENU;
-            var courses = db.Courses.Include(c => c.Department);
+            var courses = repository.GetCourses().Include(c => c.Department);
             return View(courses.ToList());
         }
 
@@ -31,7 +43,7 @@ namespace MvcBootstrap.Controllers
         public ActionResult Details(int id = 0)
         {
             ViewBag.menu = MENU;
-            Course course = db.Courses.Find(id);
+            Course course = repository.GetByID(id);
             if (course == null)
             {
                 return HttpNotFound();
@@ -62,8 +74,8 @@ namespace MvcBootstrap.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    db.Courses.Add(course);
-                    db.SaveChanges();
+                    repository.Insert(course);
+                    repository.Save();
                     TempData["message"] = string.Format("{0} has been saved", course.Title);
                     return RedirectToAction("Index");
                 }
@@ -84,7 +96,7 @@ namespace MvcBootstrap.Controllers
         public ActionResult Edit(int id = 0)
         {
             ViewBag.menu = MENU;
-            Course course = db.Courses.Find(id);
+            Course course = repository.GetByID(id);
             if (course == null)
             {
                 return HttpNotFound();
@@ -104,13 +116,13 @@ namespace MvcBootstrap.Controllers
             ViewBag.menu = MENU;
             if (ModelState.IsValid)
             {
-                db.Entry(course).State = EntityState.Modified;
-                db.SaveChanges();
+                repository.Update(course);
+                repository.Save();
                 TempData["message"] = string.Format("{0} has been saved", course.Title);
                 return RedirectToAction("Index");
             }
 
-            ViewBag.DepartmentID = new SelectList(db.Departments, "DepartmentID", "Name", course.DepartmentID);
+            PopulateDepartmentsDropDownList(course.DepartmentID);
             return View(course);
         }
 
@@ -120,7 +132,7 @@ namespace MvcBootstrap.Controllers
         public ActionResult Delete(int id = 0)
         {
             ViewBag.menu = MENU;
-            Course course = db.Courses.Find(id);
+            Course course = repository.GetByID(id);
             if (course == null)
             {
                 return HttpNotFound();
@@ -137,22 +149,21 @@ namespace MvcBootstrap.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             ViewBag.menu = MENU;
-            Course course = new Course { CourseID = id };
-            db.Entry(course).State = EntityState.Deleted;
-            db.SaveChanges();
+            repository.Delete(id);
+            repository.Save();
             TempData["message"] = "Course was deleted";
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
-            db.Dispose();
+            repository.Dispose();
             base.Dispose(disposing);
         }
 
         private void PopulateDepartmentsDropDownList(object selectedDepartment = null)
         {
-            IOrderedQueryable<Department> departmentsQuery = db.Departments.OrderBy(x => x.Name);
+            IOrderedQueryable<Department> departmentsQuery = repository.Context.Departments.OrderBy(x => x.Name);
             ViewBag.DepartmentID = new SelectList(departmentsQuery, "DepartmentID", "Name", selectedDepartment);
         }
     }

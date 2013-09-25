@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace MvcBootstrap.Abstract
 {
-    public interface IStudentRepository : IDisposable
+    public interface ICourseRepository : IDisposable
     {
         SchoolContext Context { get; }
-        IQueryable<Student> GetStudents();
-        Student GetByID(int id);
-        void Insert(Student student);
+        IQueryable<Course> GetCourses();
+        Course GetByID(int id);
+        void Insert(Course course);
         void Delete(int id);
-        void Update(Student student);
+        void Update(Course course);
         void Save();
     }
 }

@@ -1,4 +1,6 @@
-﻿using MvcBootstrap.Context;
+﻿using MvcBootstrap.Abstract;
+using MvcBootstrap.Concrete;
+using MvcBootstrap.Context;
 using MvcBootstrap.Models;
 using MvcBootstrap.ViewModels;
 using System;
@@ -14,7 +16,17 @@ namespace MvcBootstrap.Controllers
     public class InstructorController : Controller
     {
         public const string MENU = "Instructor";
-        private SchoolContext db = new SchoolContext();
+        private IInstructorRepository repository;
+
+        public InstructorController()
+        {
+            this.repository = new InstructorRepository(new SchoolContext());
+        }
+
+        public InstructorController(IInstructorRepository repository)
+        {
+            this.repository = repository;
+        }
 
         //
         // GET: /Instructor/
@@ -23,7 +35,7 @@ namespace MvcBootstrap.Controllers
         {
             ViewBag.menu = MENU;
             InstructorIndexData viewModel = new InstructorIndexData();
-            viewModel.Instructors = db.Instructors
+            viewModel.Instructors = repository.GetInstructors()
                 .Include(i => i.OfficeAssignment)
                 .Include(i => i.Courses.Select(x => x.Department))
                 .OrderBy(i => i.LastName);
@@ -49,7 +61,7 @@ namespace MvcBootstrap.Controllers
         public ActionResult Details(int id = 0)
         {
             ViewBag.menu = MENU;
-            Instructor instructor = db.Instructors.Find(id);
+            Instructor instructor = repository.GetByID(id);
             if (instructor == null)
             {
                 return HttpNotFound();
@@ -64,7 +76,7 @@ namespace MvcBootstrap.Controllers
         public ActionResult Create()
         {
             ViewBag.menu = MENU;
-            ViewBag.PersonID = new SelectList(db.OfficeAssignments, "PersonID", "Location");
+            ViewBag.PersonID = new SelectList(repository.Context.OfficeAssignments, "PersonID", "Location");
             return View();
         }
 
@@ -78,13 +90,13 @@ namespace MvcBootstrap.Controllers
             ViewBag.menu = MENU;
             if (ModelState.IsValid)
             {
-                db.Instructors.Add(instructor);
-                db.SaveChanges();
+                repository.Insert(instructor);
+                repository.Save();
                 TempData["message"] = string.Format("{0} has been saved", instructor.FullName);
                 return RedirectToAction("Index");
             }
 
-            ViewBag.PersonID = new SelectList(db.OfficeAssignments, "PersonID", "Location", instructor.PersonID);
+            ViewBag.PersonID = new SelectList(repository.Context.OfficeAssignments, "PersonID", "Location", instructor.PersonID);
             return View(instructor);
         }
 
@@ -94,7 +106,7 @@ namespace MvcBootstrap.Controllers
         public ActionResult Edit(int id = 0)
         {
             ViewBag.menu = MENU;
-            Instructor instructor = db.Instructors
+            Instructor instructor = repository.GetInstructors()
                 .Include(i => i.OfficeAssignment)
                 .Include(i => i.Courses)
                 .Where(i => i.PersonID == id)
@@ -116,7 +128,7 @@ namespace MvcBootstrap.Controllers
         public ActionResult Edit(int id, FormCollection fc, string[] selectedCourses)
         {
             ViewBag.menu = MENU;
-            Instructor instructorToUpdate = db.Instructors
+            Instructor instructorToUpdate = repository.GetInstructors()
                 .Include(i => i.OfficeAssignment)
                 .Include(i => i.Courses)
                 .Where(i => i.PersonID == id)
@@ -127,13 +139,8 @@ namespace MvcBootstrap.Controllers
             {
                 try
                 {
-                    if (String.IsNullOrWhiteSpace(instructorToUpdate.OfficeAssignment.Location))
-                        instructorToUpdate.OfficeAssignment = null;
-
-                    UpdateInstructorCourses(selectedCourses, instructorToUpdate);
-
-                    db.Entry(instructorToUpdate).State = EntityState.Modified;
-                    db.SaveChanges();
+                    repository.Update(instructorToUpdate, selectedCourses);
+                    repository.Save();
                     TempData["message"] = string.Format("{0} has been saved", instructorToUpdate.FullName);
 
                     return RedirectToAction("Index");
@@ -155,7 +162,7 @@ namespace MvcBootstrap.Controllers
         public ActionResult Delete(int id = 0)
         {
             ViewBag.menu = MENU;
-            Instructor instructor = db.Instructors.Find(id);
+            Instructor instructor = repository.GetByID(id);
             if (instructor == null)
             {
                 return HttpNotFound();
@@ -172,27 +179,21 @@ namespace MvcBootstrap.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             ViewBag.menu = MENU;
-            Instructor instructor = db.Instructors
-                .Include(i => i.OfficeAssignment)
-                .Where(i => i.PersonID == id)
-                .Single();
-
-            instructor.OfficeAssignment = null;
-            db.Instructors.Remove(instructor);
-            db.SaveChanges();
+            repository.Delete(id);
+            repository.Save();
             TempData["message"] = "Instructor was deleted";
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
-            db.Dispose();
+            repository.Dispose();
             base.Dispose(disposing);
         }
 
         private void PopulateAssignedCourseData(Instructor instructor)
         {
-            DbSet<Course> allCourses = db.Courses;
+            DbSet<Course> allCourses = repository.Context.Courses;
             HashSet<int> instructorCourses = new HashSet<int>(instructor.Courses.Select(c => c.CourseID));
             List<AssignedCourseData> viewModel = new List<AssignedCourseData>();
             foreach (Course course in allCourses)
@@ -219,7 +220,7 @@ namespace MvcBootstrap.Controllers
             HashSet<string> selectedCoursesHS = new HashSet<string>(selectedCourses);
             HashSet<int> instructorCourses = new HashSet<int>
                 (instructorToUpdate.Courses.Select(c => c.CourseID));
-            foreach (Course course in db.Courses)
+            foreach (Course course in repository.Context.Courses)
             {
                 if (selectedCoursesHS.Contains(course.CourseID.ToString()))
                 {

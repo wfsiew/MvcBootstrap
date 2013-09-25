@@ -9,12 +9,12 @@ using System.Web;
 
 namespace MvcBootstrap.Concrete
 {
-    public class StudentRepository : IStudentRepository, IDisposable
+    public class CourseRepository : ICourseRepository, IDisposable
     {
         private bool disposed = false;
         private SchoolContext context;
 
-        public StudentRepository(SchoolContext context)
+        public CourseRepository(SchoolContext context)
         {
             this.context = context;
         }
@@ -27,30 +27,30 @@ namespace MvcBootstrap.Concrete
             }
         }
 
-        public IQueryable<Student> GetStudents()
+        public IQueryable<Course> GetCourses()
         {
-            return context.Students;
+            return context.Courses;
         }
 
-        public Student GetByID(int id)
+        public Course GetByID(int id)
         {
-            return context.Students.Find(id);
+            return context.Courses.Find(id);
         }
 
-        public void Insert(Student student)
+        public void Insert(Course course)
         {
-            context.Students.Add(student);
+            context.Courses.Add(course);
         }
 
-        public void Delete(int studentID)
+        public void Delete(int id)
         {
-            Student student = new Student { PersonID = studentID };
-            context.Entry(student).State = EntityState.Deleted;
+            Course course = new Course { CourseID = id };
+            context.Entry(course).State = EntityState.Deleted;
         }
 
-        public void Update(Student student)
+        public void Update(Course course)
         {
-            context.Entry(student).State = EntityState.Modified;
+            context.Entry(course).State = EntityState.Modified;
         }
 
         public void Save()

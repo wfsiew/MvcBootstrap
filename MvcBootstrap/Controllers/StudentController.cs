@@ -6,7 +6,6 @@ using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -16,16 +15,16 @@ namespace MvcBootstrap.Controllers
     public class StudentController : Controller
     {
         public const string MENU = "Student";
-        private IStudentRepository studentRepository;
+        private IStudentRepository repository;
 
         public StudentController()
         {
-            this.studentRepository = new StudentRepository(new SchoolContext());
+            this.repository = new StudentRepository(new SchoolContext());
         }
 
-        public StudentController(IStudentRepository studentRepository)
+        public StudentController(IStudentRepository repository)
         {
-            this.studentRepository = studentRepository;
+            this.repository = repository;
         }
 
         //
@@ -47,7 +46,7 @@ namespace MvcBootstrap.Controllers
 
             ViewBag.CurrentFilter = searchString;
 
-            var students = studentRepository.GetStudents();
+            var students = repository.GetStudents();
 
             if (!string.IsNullOrEmpty(searchString))
             {
@@ -94,7 +93,7 @@ namespace MvcBootstrap.Controllers
         public ActionResult Details(int id = 0)
         {
             ViewBag.menu = MENU;
-            Student student = studentRepository.GetStudentByID(id);
+            Student student = repository.GetByID(id);
             if (student == null)
             {
                 return HttpNotFound();
@@ -124,8 +123,8 @@ namespace MvcBootstrap.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    studentRepository.InsertStudent(student);
-                    studentRepository.Save();
+                    repository.Insert(student);
+                    repository.Save();
                     TempData["message"] = string.Format("{0} has been saved", student.FullName);
                     return RedirectToAction("Index");
                 }
@@ -145,7 +144,7 @@ namespace MvcBootstrap.Controllers
         public ActionResult Edit(int id = 0)
         {
             ViewBag.menu = MENU;
-            Student student = studentRepository.GetStudentByID(id);
+            Student student = repository.GetByID(id);
             if (student == null)
             {
                 return HttpNotFound();
@@ -164,8 +163,8 @@ namespace MvcBootstrap.Controllers
             ViewBag.menu = MENU;
             if (ModelState.IsValid)
             {
-                studentRepository.UpdateStudent(student);
-                studentRepository.Save();
+                repository.Update(student);
+                repository.Save();
                 TempData["message"] = string.Format("{0} has been saved", student.FullName);
                 return RedirectToAction("Index");
             }
@@ -182,7 +181,7 @@ namespace MvcBootstrap.Controllers
             if (saveChangesError.GetValueOrDefault())
                 ViewBag.ErrorMessage = "Delete failed. Try again, and if the problem persists see your system administrator.";
 
-            Student student = studentRepository.GetStudentByID(id);
+            Student student = repository.GetByID(id);
             if (student == null)
             {
                 return HttpNotFound();
@@ -201,8 +200,8 @@ namespace MvcBootstrap.Controllers
             ViewBag.menu = MENU;
             try
             {
-                studentRepository.DeleteStudent(id);
-                studentRepository.Save();
+                repository.Delete(id);
+                repository.Save();
                 TempData["message"] = "Student was deleted";
             }
 
@@ -216,7 +215,7 @@ namespace MvcBootstrap.Controllers
 
         protected override void Dispose(bool disposing)
         {
-            studentRepository.Dispose();
+            repository.Dispose();
             base.Dispose(disposing);
         }
     }
