@@ -1,5 +1,4 @@
-﻿ASP.NET MVC 4 using Bootstrap and Angular JS
-============================================
+﻿# ASP.NET MVC 4 using Bootstrap and Angular JS
 
 http://mvcbootstrap.apphb.com
 

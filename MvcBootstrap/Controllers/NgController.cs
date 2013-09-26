@@ -10,32 +10,30 @@ using System.Web.Mvc;
 
 namespace MvcBootstrap.Controllers
 {
-    public class HomeController : Controller
+    public class NgController : Controller
     {
-        public const string MENU = "Home";
         private IStudentRepository repository;
 
-        public HomeController(IStudentRepository repository)
+        public NgController(IStudentRepository repository)
         {
             this.repository = repository;
         }
 
         //
-        // GET: /Home/
+        // GET: /Ng/
 
         public ActionResult Index()
         {
-            ViewBag.menu = MENU;
             return View();
         }
 
         public ActionResult About()
         {
-            ViewBag.menu = "About";
-            IQueryable<EnrollmentDateGroup> data = repository.GetStudents().GroupBy(x => x.EnrollmentDate, 
+            IQueryable<EnrollmentDateGroup> data = repository.GetStudents().GroupBy(x => x.EnrollmentDate,
                 (k, v) => new EnrollmentDateGroup { EnrollmentDate = k, StudentCount = v.Count() });
-            
-            return View(data);
+            List<EnrollmentDateGroup> l = data.ToList();
+
+            return Json(l, JsonRequestBehavior.AllowGet);
         }
 
         protected override void Dispose(bool disposing)
