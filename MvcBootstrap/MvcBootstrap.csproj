@@ -163,10 +163,10 @@
     <Compile Include="Concrete\UnitOfWork.cs" />
     <Compile Include="Context\SchoolContext.cs" />
     <Compile Include="Controllers\CourseController.cs" />
+    <Compile Include="Controllers\Default1Controller.cs" />
     <Compile Include="Controllers\DepartmentController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InstructorController.cs" />
-    <Compile Include="Controllers\NgController.cs" />
     <Compile Include="Controllers\StudentController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

@@ -25,7 +25,6 @@ namespace MvcBootstrap
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             DependencyResolver.SetResolver(new NinjectMvcDependencyResolver());
-            GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
         }
     }
 }
