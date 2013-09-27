@@ -1,0 +1,55 @@
+﻿<h2>Create</h2>
+
+<div class="well">
+    <form name="studentform" method="post" class="form-horizontal">
+        <ng-include src="'ngview/shared/alert.html'"></ng-include>
+
+        <fieldset>
+            <legend>Student</legend>
+
+            <div class="control-group">
+                <label class="control-label">Last Name</label>
+                <div class="controls">
+                    <input id="LastName" type="text" x-webkit-speech="x-webkit-speech" value="" placeholder="Last Name" 
+                        name="LastName" data-val-regex-pattern="^[A-Z]+[a-zA-Z''-'\s]*$" 
+                        data-val-regex="The field Last Name must match the regular expression '^[A-Z]+[a-zA-Z''-'\s]*$'." 
+                        data-val-length-max="50" data-val-length="The field Last Name must be a string with a maximum length of 50." 
+                        data-val="true"
+                        ng-model="LastName">
+                    <span class="field-validation-valid label label-important" data-valmsg-replace="true" data-valmsg-for="LastName"></span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">First Name</label>
+                <div class="controls">
+                    <input id="FirstMidName" type="text" x-webkit-speech="x-webkit-speech" value="" placeholder="First Name" 
+                        name="FirstMidName" data-val-length-max="50" 
+                        data-val-length="First name must be between 2 and 50 characters." 
+                        data-val="true"
+                        ng-model="FirstMidName">
+                    <span class="field-validation-valid label label-important" data-valmsg-replace="true" data-valmsg-for="FirstMidName"></span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Enrollment Date</label>
+                <div class="controls">
+                    <input id="EnrollmentDate" type="text" x-webkit-speech="x-webkit-speech" value="" placeholder="Enrollment Date" 
+                        name="EnrollmentDate" data-val-required="The Enrollment Date field is required." 
+                        data-val-date="The field Enrollment Date must be a date." 
+                        data-val="true"
+                        ng-model="EnrollmentDate"
+                        datepicker-popup="yyyy-MM-dd"
+                        is-open="opened">
+                    <button class="btn" ng-click="open()"><i class="icon-calendar"></i></button>
+                    <span class="field-validation-valid label label-important" data-valmsg-replace="true" data-valmsg-for="EnrollmentDate"></span>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <button type="button" class="btn btn-primary" ng-click="save()"><i class="icon-floppy-disk"></i> Create</button>
+                    <a class="btn btn-default" href="#/students"><i class="icon-arrow-left"></i> Cancel</a>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>

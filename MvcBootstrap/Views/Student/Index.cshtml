@@ -8,11 +8,13 @@
 
 <h2>Students</h2>
 
-<nav class="navbar navbar-default" role="navigation">
-    <ul class="nav navbar-nav">
-        <li><a href="@Url.Action("Create")"><i class="glyphicon glyphicon-plus"></i>Create New</a></li>
-    </ul>
-</nav>
+<div class="navbar">
+    <div class="navbar-inner">
+        <ul class="nav">
+            <li><a href="@Url.Action("Create")"><i class="icon-plus"></i>Create New</a></li>
+        </ul>
+    </div>
+</div>
 
 @if (TempData["message"] != null)
 {
@@ -24,14 +26,12 @@
 
 @using (Html.BeginForm("Index", "Student", FormMethod.Get, new { @class = "form-horizontal" }))
 {
-    <div class="form-group">
-        <label class="col-lg-2 control-label">Find by name:</label>
-        <div class="col-lg-6">
-            <div class="input-group">
-                <input type="text" name="SearchString" value="@ViewBag.CurrentFilter" class="form-control col-lg-5" placeholder="Search" x-webkit-speech="x-webkit-speech" />
-                <span class="input-group-btn">
-                    <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i></button>
-                </span>
+    <div class="control-group">
+        <label class="control-label">Find by name:</label>
+        <div class="controls">
+            <div class="input-append">
+                <input type="text" name="SearchString" value="@ViewBag.CurrentFilter" placeholder="Search" x-webkit-speech="x-webkit-speech" />
+                <button type="submit" class="btn btn-default"><i class="icon-search"></i></button>
             </div>
         </div>
     </div>
@@ -86,7 +86,6 @@
 @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }),
 new PagedListRenderOptions
 {
-    UlElementClasses = new string[] { "pagination" },
     DisplayLinkToPreviousPage = PagedListDisplayMode.IfNeeded,
     DisplayLinkToFirstPage = PagedListDisplayMode.IfNeeded,
     DisplayLinkToNextPage = PagedListDisplayMode.IfNeeded,

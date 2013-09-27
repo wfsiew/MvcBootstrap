@@ -11,7 +11,7 @@ namespace MvcBootstrap.Helpers
         {
             return new Dictionary<string, object>
             {
-                { "class", "col-lg-2 control-label" }
+                { "class", "control-label" }
             };
         }
 
@@ -19,7 +19,6 @@ namespace MvcBootstrap.Helpers
         {
             return new Dictionary<string, object>
             {
-                { "class", "form-control" },
                 { "placeholder", placeholder },
                 { "x-webkit-speech", "x-webkit-speech" }
             };
