@@ -33,14 +33,58 @@ function StudentCtrl($scope, $http, Page, Menu) {
     $http.get('/Ngstudent/Index').success(function (data) {
         $scope.pager = data.pager;
         $scope.model = data.model;
+        $scope.currentSort = data.sortOrder;
     });
 
     $scope.find = function () {
-        var keyword = $scope.SearchString;
-        $http.get('/Ngstudent/Index', { params: { SearchString: keyword } }).success(function (data) {
+        var params = {
+            SearchString: $scope.SearchString,
+            sortOrder: $scope.currentSort
+        };
+        $http.get('/Ngstudent/Index', { params: params }).success(function (data) {
             $scope.pager = data.pager;
             $scope.model = data.model;
         });
+    }
+
+    $scope.gotoPage = function (page) {
+        var params = {
+            SearchString: $scope.SearchString,
+            sortOrder: $scope.currentSort,
+            page: page
+        };
+        $http.get('/Ngstudent/Index', { params: params }).success(function (data) {
+            $scope.pager = data.pager;
+            $scope.model = data.model;
+        });
+    }
+
+    $scope.sort = function (a) {
+        if (a == 'Name') {
+            if ($scope.currentSort == null || $scope.currentSort == '')
+                $scope.currentSort = 'Name_desc';
+
+            else
+                $scope.currentSort = '';
+        }
+
+        else if (a == 'FirstName') {
+            if ($scope.currentSort == 'FirstName')
+                $scope.currentSort = 'FirstName_desc';
+
+            else
+                $scope.currentSort = 'FirstName';
+        }
+
+        else if (a == 'Date') {
+            if ($scope.currentSort == 'Date')
+                $scope.currentSort = 'Date_desc';
+
+            else
+                $scope.currentSort = 'Date';
+        }
+
+        $scope.gotoPage($scope.pager.PageNum);
     }
 }
 

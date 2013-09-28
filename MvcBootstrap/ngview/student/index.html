@@ -28,13 +28,13 @@
         <tr>
             <th></th>
             <th>
-                <a href="">Last Name</a>
+                <a href ng-click="sort('Name')">Last Name</a>
             </th>
             <th>
-                <a href="">First Name</a>
+                <a href ng-click="sort('FirstName')">First Name</a>
             </th>
             <th>
-                <a href="">Enrollment Date</a>
+                <a href ng-click="sort('Date')">Enrollment Date</a>
             </th>
         </tr>
     </thead>
@@ -60,4 +60,10 @@
 </table>
 <br />
 
-<pagination boundary-links="true" total-items="pager.Total" page="pager.PageNum" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+<pagination boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" 
+    page="pager.PageNum"
+    total-items="pager.Total" 
+    items-per-page="pager.PageSize" 
+    max-size="10" 
+    on-select-page="gotoPage(page)">
+</pagination>

@@ -80,7 +80,8 @@ namespace MvcBootstrap.Controllers
             Dictionary<string, object> res = new Dictionary<string, object>
             {
                 { "pager", pager },
-                { "model", l }
+                { "model", l },
+                { "sortOrder", sortOrder }
             };
 
             return Json(res, JsonRequestBehavior.AllowGet);
