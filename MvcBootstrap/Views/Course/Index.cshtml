@@ -11,7 +11,7 @@
 <div class="navbar">
     <div class="navbar-inner">
         <ul class="nav">
-            <li><a href="@Url.Action("Create")"><i class="icon-plus icon-white"></i>Create New</a></li>
+            <li><a href="@Url.Action("Create")"><i class="icon-plus icon-white"></i> Create New</a></li>
         </ul>
     </div>
 </div>
@@ -39,7 +39,7 @@
 
 <table class="table table-striped table-hover table-condensed">
     <thead>
-        <tr>
+        <tr class="well">
             <th></th>
             <th>
                 @Html.ActionLink("Number", "Index", new { sortOrder = ViewBag.CourseIDSortParm })
@@ -80,9 +80,12 @@
         }
     </tbody>
     <tfoot>
-        <tr>
-            <td colspan="4">
-                <span class="badge">Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount</span>
+        <tr class="well">
+            <td colspan="5">
+			    <div class="pull-right">
+				    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+				</div>
+                
             </td>
         </tr>
     </tfoot>

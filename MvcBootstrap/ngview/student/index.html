@@ -3,12 +3,18 @@
 <div class="navbar">
     <div class="navbar-inner">
         <ul class="nav">
-            <li><a href="#/students/create"><i class="icon-plus icon-white"></i>Create New</a></li>
+            <li>
+                <a href="#/students/create"><i class="icon-plus icon-white"></i> Create New</a>
+            </li>
+            <li ng-show="selected.count > 0">
+                <a href ng-click="removeItems()"><i class="icon-trash icon-white"></i> Delete</a>
+            </li>
         </ul>
     </div>
 </div>
 
 <ng-include src="'ngview/shared/success.html'"></ng-include>
+<ng-include src="'ngview/shared/info.html'"></ng-include>
 
 <form class="form-horizontal">
     <div class="control-group">
@@ -25,40 +31,49 @@
 
 <table class="table table-striped table-hover table-condensed">
     <thead>
-        <tr>
+        <tr class="well">
+            <th>
+                <input type="checkbox" ng-model="selected.all" ng-click="selectAll($event)" />
+            </th>
+            <th>
+                <a href ng-click="sort('Name')">Last Name <i ng-class="getSortCss('Name')"></i></a>
+            </th>
             <th></th>
             <th>
-                <a href ng-click="sort('Name')">Last Name</a>
+                <a href ng-click="sort('FirstName')">First Name <i ng-class="getSortCss('FirstName')"></i></a>
             </th>
             <th>
-                <a href ng-click="sort('FirstName')">First Name</a>
-            </th>
-            <th>
-                <a href ng-click="sort('Date')">Enrollment Date</a>
+                <a href ng-click="sort('Date')">Enrollment Date <i ng-class="getSortCss('Date')"></i></a>
             </th>
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="o in model">
+        <tr ng-repeat="o in model" ng-mouseover="o.mouseover = true" ng-mouseleave="o.mouseover = false">
             <td>
-                <a href="#/students/edit/{{o.PersonID}}">Edit</a>
-                <a href="#/students/details/{{o.PersonID}}">Details</a>
-                <a href="#/students/delete/{{o.PersonID}}">Delete</a>
+                <input type="checkbox" ng-model="o.selected" ng-click="selectRow($event, o)" />
             </td>
             <td>{{o.LastName}}</td>
+            <td class="menuitem">
+                <div ng-show="o.mouseover">
+                    <a href="#/students/edit/{{o.PersonID}}" tooltip="Edit" tooltip-trigger="mouseenter" tooltip-placement="bottom"><i class="icon-pencil icon-white"></i></a>
+                    <a href="#/students/details/{{o.PersonID}}" tooltip="Details" tooltip-trigger="mouseenter" tooltip-placement="bottom"><i class="icon-list-alt icon-white"></i></a>
+                    <a href ng-click="removeItem(o)" tooltip="Delete" tooltip-trigger="mouseenter" tooltip-placement="bottom"><i class="icon-trash icon-white"></i></a>
+                </div>
+            </td>
             <td>{{o.FirstMidName}}</td>
             <td>{{o.EnrollmentDate | datefilter | date:'dd/MM/yyyy'}}</td>
         </tr>
     </tbody>
     <tfoot>
-        <tr>
-            <td colspan="4">
-                <span class="badge">Page {{pager.PageNum}} of {{pager.TotalPages}}</span>
+        <tr class="well">
+            <td colspan="5">
+                <div class="pull-right">
+                    Page {{pager.PageNum}} of {{pager.TotalPages}}
+                </div>
             </td>
         </tr>
     </tfoot>
 </table>
-<br />
 
 <pagination boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" 
     page="pager.PageNum"

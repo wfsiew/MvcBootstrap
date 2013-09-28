@@ -25,6 +25,14 @@ function StudentCtrl($scope, $http, Page, Menu) {
     Page.setTitle('Students');
     Menu.setMenu('students');
 
+    $scope.selected = {
+        all: false,
+        count: 0,
+        message: function () {
+            return this.count + " item" + (this.count > 1 ? 's' : '') + " selected";
+        }
+    };
+
     if (Page.message().show) {
         $scope.message = _.clone(Page.message());
         Page.resetMessage();
@@ -34,6 +42,7 @@ function StudentCtrl($scope, $http, Page, Menu) {
         $scope.pager = data.pager;
         $scope.model = data.model;
         $scope.currentSort = data.sortOrder;
+        $scope.sortByName = true;
     });
 
     $scope.find = function () {
@@ -85,6 +94,65 @@ function StudentCtrl($scope, $http, Page, Menu) {
         }
 
         $scope.gotoPage($scope.pager.PageNum);
+    }
+
+    $scope.getSortCss = function (a) {
+        var up = 'icon-chevron-up icon-white';
+        var down = 'icon-chevron-down icon-white';
+
+        if (($scope.currentSort == null || $scope.currentSort == '') && a == 'Name')
+            return up;
+
+        if ($scope.currentSort.indexOf(a) == 0) {
+            if ($scope.currentSort.indexOf('desc') > 0)
+                return down;
+
+            else
+                return up;
+        }
+
+        return null;
+    }
+
+    $scope.selectRow = function ($event, o) {
+        $event.stopPropagation();
+
+        if (o.selected)
+            ++$scope.selected.count;
+
+        else
+            --$scope.selected.count;
+    }
+
+    $scope.selectAll = function ($event) {
+        $event.stopPropagation();
+
+        var list = null;
+        var n = 0;
+
+        if ($scope.model != null)
+            list = $scope.model;
+
+        if (list != null)
+            n = list.length;
+
+        for (var i = 0; i < n; i++) {
+            var o = list[i];
+            o.selected = $scope.selected.all;
+        }
+
+        if ($scope.selected.all)
+            $scope.selected.count = n;
+
+        else
+            $scope.selected.count = 0;
+    }
+
+    $scope.removeItems = function () {
+        if ($scope.selected.count < 1)
+            return;
+
+        alert('del');
     }
 }
 
