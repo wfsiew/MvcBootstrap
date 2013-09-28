@@ -30,6 +30,10 @@ function StudentCtrl($scope, $http, Page, Menu) {
         count: 0,
         message: function () {
             return this.count + " item" + (this.count > 1 ? 's' : '') + " selected";
+        },
+        reset: function () {
+            this.all = false;
+            this.count = 0;
         }
     };
 
@@ -38,22 +42,8 @@ function StudentCtrl($scope, $http, Page, Menu) {
         Page.resetMessage();
     }
 
-    $http.get('/Ngstudent/Index').success(function (data) {
-        $scope.pager = data.pager;
-        $scope.model = data.model;
-        $scope.currentSort = data.sortOrder;
-        $scope.sortByName = true;
-    });
-
     $scope.find = function () {
-        var params = {
-            SearchString: $scope.SearchString,
-            sortOrder: $scope.currentSort
-        };
-        $http.get('/Ngstudent/Index', { params: params }).success(function (data) {
-            $scope.pager = data.pager;
-            $scope.model = data.model;
-        });
+        $scope.gotoPage(1);
     }
 
     $scope.gotoPage = function (page) {
@@ -152,8 +142,50 @@ function StudentCtrl($scope, $http, Page, Menu) {
         if ($scope.selected.count < 1)
             return;
 
-        alert('del');
+        var list = $scope.model;
+        var lx = _.where(list, { selected: true });
+        var ids = _.map(lx, function (o) {
+            return o.PersonID;
+        });
+        $http.post('/Ngstudent/Delete', { ids: ids }).success(function (data) {
+            if (data.success == 1) {
+                Page.setMessage(data.message);
+                $scope.message = _.clone(Page.message());
+                Page.resetMessage();
+                $scope.selected.reset();
+                $scope.gotoPage($scope.pager.PageNum);
+            }
+
+            else if (data.error == 1) {
+                $scope.error = true;
+                $scope.errorText = data.message;
+            }
+        });
     }
+
+    $scope.removeItem = function (o) {
+        var ids = [o.PersonID];
+        $http.post('/Ngstudent/Delete', { ids: ids }).success(function (data) {
+            if (data.success == 1) {
+                Page.setMessage(data.message);
+                $scope.message = _.clone(Page.message());
+                Page.resetMessage();
+                $scope.selected.reset();
+                $scope.gotoPage($scope.pager.PageNum);
+            }
+
+            else if (data.error == 1) {
+                $scope.error = true;
+                $scope.errorText = data.message;
+            }
+        });
+    }
+
+    $scope.dismissAlert = function () {
+        $scope.error = false;
+    }
+
+    $scope.gotoPage(1);
 }
 
 function StudentCreateCtrl($scope, $http, $timeout, Page, Menu) {
@@ -205,7 +237,24 @@ function StudentEditCtrl($scope, $http, $routeParams, $timeout, Page, Menu) {
     });
 
     $scope.save = function () {
+        var o = {
+            PersonID: $scope.model.PersonID,
+            LastName: $scope.model.LastName,
+            FirstMidName: $scope.model.FirstMidName,
+            EnrollmentDate: utils.getDateStr($scope.model.EnrollmentDate)
+        };
 
+        $http.post('/Ngstudent/Edit', o).success(function (data) {
+            if (data.success == 1) {
+                Page.setMessage(data.message);
+                window.location.href = '#/students';
+            }
+
+            else if (data.error == 1) {
+                $scope.error = true;
+                $scope.errorText = data.message;
+            }
+        });
     }
 
     $scope.open = function () {

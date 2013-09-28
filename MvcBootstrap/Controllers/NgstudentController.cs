@@ -80,8 +80,7 @@ namespace MvcBootstrap.Controllers
             Dictionary<string, object> res = new Dictionary<string, object>
             {
                 { "pager", pager },
-                { "model", l },
-                { "sortOrder", sortOrder }
+                { "model", l }
             };
 
             return Json(res, JsonRequestBehavior.AllowGet);
@@ -117,8 +116,8 @@ namespace MvcBootstrap.Controllers
                 //throw new Exception("Error" + DateTime.Now);
                 if (ModelState.IsValid)
                 {
-                    //repository.Insert(student);
-                    //repository.Save();
+                    repository.Insert(student);
+                    repository.Save();
                     res["success"] = 1;
                     res["message"] = string.Format("{0} has been saved", student.FullName);
                 }
@@ -144,6 +143,53 @@ namespace MvcBootstrap.Controllers
                 PersonID = student.PersonID
             };
             return Json(o, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(Student student)
+        {
+            Dictionary<string, object> res = new Dictionary<string, object>();
+
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    repository.Update(student);
+                    repository.Save();
+                    res["success"] = 1;
+                    res["message"] = string.Format("{0} has been saved", student.FullName);
+                }
+            }
+
+            catch (Exception ex)
+            {
+                res["error"] = 1;
+                res["message"] = ex.ToString();
+            }
+
+            return Json(res, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult Delete(List<int> ids)
+        {
+            Dictionary<string, object> res = new Dictionary<string, object>();
+
+            try
+            {
+                repository.Delete(ids);
+                repository.Save();
+                res["success"] = 1;
+                res["message"] = string.Format("{0} student(s) has been successfully deleted", ids.Count);
+            }
+
+            catch (Exception ex)
+            {
+                res["error"] = 1;
+                res["message"] = ex.ToString();
+            }
+
+            return Json(res, JsonRequestBehavior.AllowGet);
         }
 
         protected override void Dispose(bool disposing)
