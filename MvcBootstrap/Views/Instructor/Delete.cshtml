@@ -48,7 +48,7 @@
 @using (Html.BeginForm()) {
     @Html.AntiForgeryToken()
     <p>
-        <button type="submit" class="btn btn-primary"><i class="icon-remove icon-white"></i>Delete</button>
+        <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i>Delete</button>
         <a class="btn btn-default" href="@Url.Action("Index")"><i class="icon-arrow-left icon-white"></i>Cancel</a>
     </p>
 }
