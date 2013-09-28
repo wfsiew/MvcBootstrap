@@ -279,7 +279,7 @@ namespace MvcBootstrap.Controllers
         private void PopulateInstructorsDropDownList(object selectedInstructor = null)
         {
             IOrderedQueryable<Instructor> instructorsQuery = repository.Context.Instructors.OrderBy(x => x.LastName);
-            ViewBag.PersonID = new SelectList(instructorsQuery, "PersonID", "FullName", selectedInstructor);
+            ViewBag.PersonID_ = new SelectList(instructorsQuery, "PersonID", "FullName", selectedInstructor);
         }
     }
 }

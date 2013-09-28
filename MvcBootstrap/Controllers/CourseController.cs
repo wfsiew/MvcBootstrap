@@ -222,7 +222,7 @@ namespace MvcBootstrap.Controllers
         private void PopulateDepartmentsDropDownList(object selectedDepartment = null)
         {
             IOrderedQueryable<Department> departmentsQuery = repository.Context.Departments.OrderBy(x => x.Name);
-            ViewBag.DepartmentID = new SelectList(departmentsQuery, "DepartmentID", "Name", selectedDepartment);
+            ViewBag.DepartmentID_ = new SelectList(departmentsQuery, "DepartmentID", "Name", selectedDepartment);
         }
     }
 }
