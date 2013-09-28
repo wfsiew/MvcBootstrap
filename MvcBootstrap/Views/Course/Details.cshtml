@@ -13,27 +13,27 @@
         <fieldset>
             <legend>Course</legend>
 
-            <div class="form-group">
+            <div class="control-group">
                 @Html.LabelFor(model => model.CourseID, HtmlHelpers.LabelAttributes())
-                <div class="col-lg-10">
+                <div class="controls">
                     @Html.DisplayFor(model => model.CourseID)
                 </div>
             </div>
-            <div class="form-group">
+            <div class="control-group">
                 @Html.LabelFor(model => model.Title, HtmlHelpers.LabelAttributes())
-                <div class="col-lg-10">
+                <div class="controls">
                     @Html.DisplayFor(model => model.Title)
                 </div>
             </div>
-            <div class="form-group">
+            <div class="control-group">
                 @Html.LabelFor(model => model.Credits, HtmlHelpers.LabelAttributes())
-                <div class="col-lg-10">
+                <div class="controls">
                     @Html.DisplayFor(model => model.Credits)
                 </div>
             </div>
-            <div class="form-group">
+            <div class="control-group">
                 @Html.LabelFor(model => model.Department.Name, HtmlHelpers.LabelAttributes())
-                <div class="col-lg-10">
+                <div class="controls">
                     @Html.DisplayFor(model => model.Department.Name)
                 </div>
             </div>
@@ -41,9 +41,11 @@
     </form>
 </div>
 
-<nav class="navbar navbar-default" role="navigation">
-    <ul class="nav navbar-nav">
-        <li><a href="@Url.Action("Edit", new { id = Model.CourseID })"><i class="glyphicon glyphicon-pencil"></i> Edit</a></li>
-        <li><a href="@Url.Action("Index")"><i class="glyphicon glyphicon-arrow-left"></i> Back to List</a></li>
-    </ul>
-</nav>
+<div class="navbar">
+    <div class="navbar-inner">
+        <ul class="nav">
+            <li><a href="@Url.Action("Edit", new { id = Model.CourseID })"><i class="glyphicon glyphicon-pencil icon-white"></i> Edit</a></li>
+            <li><a href="@Url.Action("Index")"><i class="glyphicon glyphicon-arrow-left icon-white"></i> Back to List</a></li>
+        </ul>
+    </div>
+</div>

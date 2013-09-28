@@ -10,6 +10,8 @@ app.config(['$routeProvider', function ($routeProvider) {
         when('/about', { templateUrl: 'ngview/home/about.html', controller: AboutCtrl }).
         when('/students', { templateUrl: 'ngview/student/index.html', controller: StudentCtrl }).
         when('/students/create', { templateUrl: 'ngview/student/form.html', controller: StudentCreateCtrl }).
+        when('/students/edit/:id', { templateUrl: 'ngview/student/form.html', controller: StudentEditCtrl }).
+        when('/students/details/:id', { templateUrl: 'ngview/student/details.html', controller: StudentDetailsCtrl }).
         otherwise({ redirectTo: '/index' });
 }]);
 

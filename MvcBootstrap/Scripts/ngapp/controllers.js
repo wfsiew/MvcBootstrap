@@ -26,7 +26,7 @@ function StudentCtrl($scope, $http, Page, Menu) {
     Menu.setMenu('students');
 
     if (Page.message().show) {
-        $scope.message = { text: Page.message().text, show: Page.message().show };
+        $scope.message = _.clone(Page.message());
         Page.resetMessage();
     }
 
@@ -48,11 +48,13 @@ function StudentCreateCtrl($scope, $http, $timeout, Page, Menu) {
     Page.setTitle('Create');
     Menu.setMenu('students');
 
+    $scope.action = 'Create';
+
     $scope.save = function () {
         var o = {
-            LastName: $scope.LastName,
-            FirstMidName: $scope.FirstMidName,
-            EnrollmentDate: utils.getDateStr($scope.EnrollmentDate)
+            LastName: $scope.model.LastName,
+            FirstMidName: $scope.model.FirstMidName,
+            EnrollmentDate: utils.getDateStr($scope.model.EnrollmentDate)
         };
 
         $http.post('/Ngstudent/Create', o).success(function (data) {
@@ -77,4 +79,40 @@ function StudentCreateCtrl($scope, $http, $timeout, Page, Menu) {
     $scope.dismissAlert = function () {
         $scope.error = false;
     }
+}
+
+function StudentEditCtrl($scope, $http, $routeParams, $timeout, Page, Menu) {
+    Page.setTitle('Edit');
+    Menu.setMenu('students');
+
+    $scope.action = 'Save';
+
+    $http.get('/Ngstudent/Edit/' + $routeParams.id).success(function (data) {
+        $scope.model = data;
+        $scope.model.EnrollmentDate = utils.getDate(data.EnrollmentDate);
+    });
+
+    $scope.save = function () {
+
+    }
+
+    $scope.open = function () {
+        $timeout(function () {
+            $scope.opened = true;
+        });
+    }
+
+    $scope.dismissAlert = function () {
+        $scope.error = false;
+    }
+}
+
+function StudentDetailsCtrl($scope, $http, $routeParams, Page, Menu) {
+    Page.setTitle('Details');
+    Menu.setMenu('students');
+
+    $http.get('/Ngstudent/Details/' + $routeParams.id).success(function (data) {
+        $scope.model = data.model;
+        $scope.enrollments = data.enrollments;
+    });
 }

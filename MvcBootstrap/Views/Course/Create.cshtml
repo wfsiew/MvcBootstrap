@@ -17,38 +17,38 @@
     <fieldset>
         <legend>Course</legend>
 
-        <div class="form-group">
+        <div class="control-group">
             @Html.LabelFor(model => model.CourseID, HtmlHelpers.LabelAttributes())
-            <div class="col-lg-10">
+            <div class="controls">
                 @Html.TextBoxFor(model => model.CourseID, HtmlHelpers.TextBoxAttributes("Number"))
-                @Html.ValidationMessageFor(model => model.CourseID, "", new { @class = "label label-danger" })
+                @Html.ValidationMessageFor(model => model.CourseID, "", new { @class = "label label-important" })
             </div>
         </div>
-        <div class="form-group">
+        <div class="control-group">
             @Html.LabelFor(model => model.Title, HtmlHelpers.LabelAttributes())
-            <div class="col-lg-10">
+            <div class="controls">
                 @Html.TextBoxFor(model => model.Title, HtmlHelpers.TextBoxAttributes("Title"))
-                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "label label-danger" })
+                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "label label-important" })
             </div>
         </div>
-        <div class="form-group">
+        <div class="control-group">
             @Html.LabelFor(model => model.Credits, HtmlHelpers.LabelAttributes())
-            <div class="col-lg-10">
+            <div class="controls">
                 @Html.TextBoxFor(model => model.Credits, HtmlHelpers.TextBoxAttributes("Credits"))
-                @Html.ValidationMessageFor(model => model.Credits, "", new { @class = "label label-danger" })
+                @Html.ValidationMessageFor(model => model.Credits, "", new { @class = "label label-important" })
             </div>
         </div>
-        <div class="form-group">
+        <div class="control-group">
             @Html.LabelFor(model => model.DepartmentID, "Department", HtmlHelpers.LabelAttributes())
-            <div class="col-lg-10">
-                @Html.DropDownList("DepartmentID", ViewBag.DepartmentID as SelectList, String.Empty, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.DepartmentID, "", new { @class = "label label-danger" })
+            <div class="controls">
+                @Html.DropDownList("DepartmentID", ViewBag.DepartmentID as SelectList, String.Empty, new { @class = "input-xxlarge" })
+                @Html.ValidationMessageFor(model => model.DepartmentID, "", new { @class = "label label-important" })
             </div>
         </div>
-        <div class="form-group">
-            <div class="col-lg-offset-2 col-lg-10">
-                <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-floppy-disk"></i> Create</button>
-                <a class="btn btn-default" href="@Url.Action("Index")"><i class="glyphicon glyphicon-arrow-left"></i> Cancel</a>
+        <div class="control-group">
+            <div class="controls">
+                <button type="submit" class="btn btn-primary"><i class="icon-floppy-disk icon-white"></i> Create</button>
+                <a class="btn btn-default" href="@Url.Action("Index")"><i class="icon-arrow-left icon-white"></i> Cancel</a>
             </div>
         </div>
     </fieldset>

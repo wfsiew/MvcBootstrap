@@ -13,27 +13,27 @@
         <fieldset>
             <legend>Student</legend>
 
-            <div class="form-group">
-                <label class="col-lg-2 control-label">@Html.DisplayNameFor(model => model.LastName)</label>
-                <div class="col-lg-10">
+            <div class="control-group">
+                <label class="control-label">@Html.DisplayNameFor(model => model.LastName)</label>
+                <div class="controls">
                     @Html.DisplayFor(model => model.LastName)
                 </div>
             </div>
-            <div class="form-group">
-                <label class="col-lg-2 control-label">@Html.DisplayNameFor(model => model.FirstMidName)</label>
-                <div class="col-lg-10">
+            <div class="control-group">
+                <label class="control-label">@Html.DisplayNameFor(model => model.FirstMidName)</label>
+                <div class="controls">
                     @Html.DisplayFor(model => model.FirstMidName)
                 </div>
             </div>
-            <div class="form-group">
-                <label class="col-lg-2 control-label">@Html.DisplayNameFor(model => model.EnrollmentDate)</label>
-                <div class="col-lg-10">
+            <div class="control-group">
+                <label class="control-label">@Html.DisplayNameFor(model => model.EnrollmentDate)</label>
+                <div class="controls">
                     @Html.DisplayFor(model => model.EnrollmentDate)
                 </div>
             </div>
-            <div class="form-group">
-                <label class="col-lg-2 control-label">@Html.DisplayNameFor(model => model.Enrollments)</label>
-                <div class="col-lg-10">
+            <div class="control-group">
+                <label class="control-label">@Html.DisplayNameFor(model => model.Enrollments)</label>
+                <div class="controls">
                     <table class="table table-striped table-hover table-condensed">
                         <thead>
                             <tr>
@@ -57,9 +57,11 @@
     </form>
 </div>
 
-<nav class="navbar navbar-default" role="navigation">
-    <ul class="nav navbar-nav">
-        <li><a href="@Url.Action("Edit", new { id = Model.PersonID })"><i class="glyphicon glyphicon-pencil"></i> Edit</a></li>
-        <li><a href="@Url.Action("Index")"><i class="glyphicon glyphicon-arrow-left"></i> Back to List</a></li>
-    </ul>
-</nav>
+<div class="navbar">
+    <div class="navbar-inner">
+        <ul class="nav">
+            <li><a href="@Url.Action("Edit", new { id = Model.PersonID })"><i class="icon-pencil icon-white"></i> Edit</a></li>
+            <li><a href="@Url.Action("Index")"><i class="icon-arrow-left icon-white"></i> Back to List</a></li>
+        </ul>
+    </div>
+</div>

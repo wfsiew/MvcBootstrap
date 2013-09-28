@@ -86,6 +86,26 @@ namespace MvcBootstrap.Controllers
             return Json(res, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult Details(int id = 0)
+        {
+            Student student = repository.GetByID(id);
+            var enrollments = student.Enrollments.Select(x => new
+            {
+                Course = new Course { Title = x.Course.Title },
+                Grade = Enum.GetName(typeof(Grade), x.Grade)
+            });
+            Student o = student;
+            o.Enrollments = null;
+
+            Dictionary<string, object> res = new Dictionary<string, object>
+            {
+                { "model", o },
+                { "enrollments", enrollments }
+            };
+
+            return Json(res, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpPost]
         public ActionResult Create([Bind(Include = "LastName, FirstMidName, EnrollmentDate")] Student student)
         {
@@ -110,6 +130,19 @@ namespace MvcBootstrap.Controllers
             }
 
             return Json(res, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Edit(int id = 0)
+        {
+            Student student = repository.GetByID(id);
+            Student o = new Student
+            {
+                EnrollmentDate = student.EnrollmentDate,
+                FirstMidName = student.FirstMidName,
+                LastName = student.LastName,
+                PersonID = student.PersonID
+            };
+            return Json(o, JsonRequestBehavior.AllowGet);
         }
 
         protected override void Dispose(bool disposing)

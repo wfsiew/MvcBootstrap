@@ -3,7 +3,7 @@
 <div class="navbar">
     <div class="navbar-inner">
         <ul class="nav">
-            <li><a href="#/students/create"><i class="icon-plus"></i>Create New</a></li>
+            <li><a href="#/students/create"><i class="icon-plus icon-white"></i>Create New</a></li>
         </ul>
     </div>
 </div>
@@ -17,7 +17,7 @@
             <div class="input-append">
                 <input type="text" name="SearchString" placeholder="Search" x-webkit-speech="x-webkit-speech"
                     ng-model="SearchString" ui-keypress="{13: 'find()'}" />
-                <button ng-click="find()" type="button" class="btn btn-default"><i class="icon-search"></i></button>
+                <button ng-click="find()" type="button" class="btn btn-default"><i class="icon-search icon-white"></i></button>
             </div>
         </div>
     </div>
@@ -41,9 +41,9 @@
     <tbody>
         <tr ng-repeat="o in model">
             <td>
-                <a href="#/students/edit/{o.PersonID}">Edit</a>
-                <a href="#/students/detail/{o.PersonID}">Details</a>
-                <a href="#/students/delete/{o.PersonID}">Delete</a>
+                <a href="#/students/edit/{{o.PersonID}}">Edit</a>
+                <a href="#/students/details/{{o.PersonID}}">Details</a>
+                <a href="#/students/delete/{{o.PersonID}}">Delete</a>
             </td>
             <td>{{o.LastName}}</td>
             <td>{{o.FirstMidName}}</td>

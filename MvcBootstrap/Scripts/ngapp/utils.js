@@ -10,7 +10,19 @@
         return s;
     }
 
+    function getDate(a) {
+        if (a != null) {
+            var v = a.replace('/Date(', '').replace(')/', '');
+            var i = parseInt(v);
+            var date = new Date(i);
+            return date;
+        }
+
+        return null;
+    }
+
     return {
-        getDateStr: getDateStr
+        getDateStr: getDateStr,
+        getDate: getDate
     };
 }());
