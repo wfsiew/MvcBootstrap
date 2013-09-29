@@ -13,11 +13,13 @@ namespace MvcBootstrap.Models
 
     public class Enrollment
     {
+        public const string NO_GRADE = "No grade";
+
         public int EnrollmentID { get; set; }
         public int CourseID { get; set; }
         public int PersonID { get; set; }
 
-        [DisplayFormat(NullDisplayText = "No grade")]
+        [DisplayFormat(NullDisplayText = NO_GRADE)]
         public Grade? Grade { get; set; }
 
         public virtual Course Course { get; set; }

@@ -92,7 +92,7 @@ namespace MvcBootstrap.Controllers
             var enrollments = student.Enrollments.Select(x => new
             {
                 Course = new Course { Title = x.Course.Title },
-                Grade = Enum.GetName(typeof(Grade), x.Grade)
+                Grade = x.Grade == null ? Enrollment.NO_GRADE : Enum.GetName(typeof(Grade), x.Grade)
             });
             Student o = student;
             o.Enrollments = null;
