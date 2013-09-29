@@ -64,23 +64,22 @@ namespace MvcBootstrap.Controllers
                     break;
             }
 
-            var _students = students.Select(x => new
+            int pageSize = Constants.PAGE_SIZE;
+            int pageNumber = (page ?? 1);
+
+            var l = students.ToPagedList(pageNumber, pageSize);
+            var lx = l.Select(x => new
             {
                 EnrollmentDate = x.EnrollmentDate,
                 FirstMidName = x.FirstMidName,
                 LastName = x.LastName,
                 PersonID = x.PersonID
             });
-
-            int pageSize = Constants.PAGE_SIZE;
-            int pageNumber = (page ?? 1);
-
-            var l = _students.ToPagedList(pageNumber, pageSize);
             Pager pager = new Pager(l.TotalItemCount, l.PageNumber, l.PageSize);
             Dictionary<string, object> res = new Dictionary<string, object>
             {
                 { "pager", pager },
-                { "model", l }
+                { "model", lx }
             };
 
             return Json(res, JsonRequestBehavior.AllowGet);
@@ -94,12 +93,20 @@ namespace MvcBootstrap.Controllers
                 Course = new Course { Title = x.Course.Title },
                 Grade = x.Grade == null ? Enrollment.NO_GRADE : Enum.GetName(typeof(Grade), x.Grade)
             });
-            Student o = student;
-            o.Enrollments = null;
+
+            var model = new
+            {
+                EnrollmentDate = student.EnrollmentDate,
+                FirstMidName = student.FirstMidName,
+                FullName = student.FullName,
+                LastName = student.LastName,
+                PersonID = student.PersonID,
+                Enrollments = enrollments
+            };
 
             Dictionary<string, object> res = new Dictionary<string, object>
             {
-                { "model", o },
+                { "model", model },
                 { "enrollments", enrollments }
             };
 

@@ -167,6 +167,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InstructorController.cs" />
     <Compile Include="Controllers\NgController.cs" />
+    <Compile Include="Controllers\NgdepartmentController.cs" />
     <Compile Include="Controllers\NgstudentController.cs" />
     <Compile Include="Controllers\StudentController.cs" />
     <Compile Include="Global.asax.cs">
@@ -285,6 +286,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <None Include="Scripts\jquery-1.9.1.intellisense.js" />
+    <Content Include="ngview\department\details.html" />
+    <Content Include="ngview\department\form.html" />
+    <Content Include="ngview\department\index.html" />
     <Content Include="ngview\home\about.html" />
     <Content Include="ngview\home\index.html" />
     <Content Include="ngview\shared\alert.html" />

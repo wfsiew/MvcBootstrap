@@ -1,0 +1,89 @@
+﻿<h2>Departments</h2>
+
+<div class="navbar">
+    <div class="navbar-inner">
+        <ul class="nav">
+            <li>
+                <a href="#/departments/create"><i class="icon-plus icon-white"></i> Create New</a>
+            </li>
+            <li ng-show="selected.count > 0">
+                <a href ng-click="removeItems()"><i class="icon-trash icon-white"></i> Delete</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<ng-include src="'ngview/shared/success.html'"></ng-include>
+<ng-include src="'ngview/shared/alert.html'"></ng-include>
+<ng-include src="'ngview/shared/info.html'"></ng-include>
+
+<form class="form-horizontal">
+    <div class="control-group">
+        <label class="control-label"></label>
+        <div class="controls">
+            <div class="input-append">
+                <input type="text" name="SearchString" placeholder="Search" x-webkit-speech="x-webkit-speech"
+                    ng-model="SearchString" ui-keypress="{13: 'find()'}" />
+                <button ng-click="find()" type="button" class="btn btn-default"><i class="icon-search icon-white"></i></button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<table class="table table-striped table-hover table-condensed">
+    <thead>
+        <tr class="well">
+            <th>
+                <input type="checkbox" ng-model="selected.all" ng-click="selectAll($event)" />
+            </th>
+            <th>
+                <a href ng-click="sort('Name')">Name <i ng-class="getSortCss('Name')"></i></a>
+            </th>
+            <th></th>
+            <th>
+                <a href ng-click="sort('Budget')">Budget <i ng-class="getSortCss('Budget')"></i></a>
+            </th>
+            <th>
+                <a href ng-click="sort('Date')">Start Date <i ng-class="getSortCss('Date')"></i></a>
+            </th>
+            <th>
+                <a href ng-click="sort('Admin')">Administrator <i ng-class="getSortCss('Admin')"></i></a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="o in model" ng-mouseover="o.mouseover = true" ng-mouseleave="o.mouseover = false">
+            <td>
+                <input type="checkbox" ng-model="o.selected" ng-click="selectRow($event, o)" />
+            </td>
+            <td>{{o.Name}}</td>
+            <td class="menuitem">
+                <div ng-show="o.mouseover == true">
+                    <a href="#/departments/edit/{{o.DepartmentID}}" tooltip="Edit" tooltip-trigger="mouseenter" tooltip-placement="bottom"><i class="icon-pencil icon-white"></i></a>
+                    <a href="#/departments/details/{{o.DepartmentID}}" tooltip="Details" tooltip-trigger="mouseenter" tooltip-placement="bottom"><i class="icon-list-alt icon-white"></i></a>
+                    <a href ng-click="removeItem(o)" tooltip="Delete" tooltip-trigger="mouseenter" tooltip-placement="bottom"><i class="icon-trash icon-white"></i></a>
+                </div>
+            </td>
+            <td>{{o.Budget | currency}}</td>
+            <td>{{o.StartDate | datefilter | date:'dd/MM/yyyy'}}</td>
+            <td>{{o.Administrator.FullName}}</td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr class="well">
+            <td colspan="6">
+                <div class="pull-right">
+                    Page {{pager.PageNum}} of {{pager.TotalPages}}
+                </div>
+            </td>
+        </tr>
+    </tfoot>
+</table>
+
+<pagination boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" 
+    page="pager.PageNum"
+    total-items="pager.Total" 
+    items-per-page="pager.PageSize" 
+    max-size="10" 
+    on-select-page="gotoPage(page)">
+</pagination>

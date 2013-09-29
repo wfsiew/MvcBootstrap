@@ -1,0 +1,62 @@
+﻿<h2>{{title}}</h2>
+
+<div class="well">
+    <form name="studentform" method="post" class="form-horizontal">
+        <ng-include src="'ngview/shared/alert.html'"></ng-include>
+
+        <fieldset>
+            <legend>Department</legend>
+
+            <div class="control-group">
+                <label class="control-label">Name</label>
+                <div class="controls">
+                    <input id="Name" class="input-xxlarge" type="text" x-webkit-speech="x-webkit-speech" value="" placeholder="Name" 
+                        name="Name" data-val-length-max="50" data-val-length="The field Name must be a string with a maximum length of 50." 
+                        data-val="true"
+                        ng-model="model.Name">
+                    <span class="field-validation-valid label label-important" data-valmsg-replace="true" data-valmsg-for="Name"></span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Budget</label>
+                <div class="controls">
+                    <input id="Budget" class="input-xxlarge" type="text" x-webkit-speech="x-webkit-speech" value="" placeholder="Budget" 
+                        name="Budget" data-val-required="The Budget field is required." data-val-number="The field Budget must be a number." 
+                        data-val="true"
+                        ng-model="model.Budget">
+                    <span class="field-validation-valid label label-important" data-valmsg-replace="true" data-valmsg-for="Budget"></span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Start Date</label>
+                <div class="controls">
+                    <input id="StartDate" class="input-xxlarge" type="text" x-webkit-speech="x-webkit-speech" value="" placeholder="Start Date" 
+                        name="StartDate" data-val-required="The StartDate field is required." 
+                        data-val-date="The field StartDate must be a date." data-val="true"
+                        ng-model="model.StartDate"
+                        datepicker-popup="yyyy-MM-dd"
+                        is-open="opened">
+                    <button class="btn" ng-click="open()"><i class="icon-calendar"></i></button>
+                    <span class="field-validation-valid label label-important" data-valmsg-replace="true" data-valmsg-for="StartDate"></span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Administrator</label>
+                <div class="controls">
+                    <select id="PersonID" class="input-xxlarge" name="PersonID" data-val-number="The field Administrator must be a number." 
+                        data-val="true"
+                        ng-model="model.PersonID">
+                        <option ng-repeat="o in PersonIDList" value="{{o.PersonID}}">{{o.FullName}}</option>
+                    </select>
+                    <span class="field-validation-valid label label-important" data-valmsg-replace="true" data-valmsg-for="PersonID"></span>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <button type="button" class="btn btn-primary" ng-click="save()"><i class="icon-ok icon-white"></i> {{action}}</button>
+                    <a class="btn btn-default" href="#/students"><i class="icon-arrow-left icon-white"></i> Cancel</a>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
