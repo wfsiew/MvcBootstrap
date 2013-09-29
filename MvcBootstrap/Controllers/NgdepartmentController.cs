@@ -84,6 +84,7 @@ namespace MvcBootstrap.Controllers
                 DepartmentID = x.DepartmentID,
                 Name = x.Name,
                 PersonID = x.PersonID,
+                RowVersion = Convert.ToBase64String(x.RowVersion),
                 StartDate = x.StartDate
             });
             Pager pager = new Pager(l.TotalItemCount, l.PageNumber, l.PageSize);
@@ -101,12 +102,12 @@ namespace MvcBootstrap.Controllers
             Department department = repository.GetByID(id);
             var model = new
             {
+                Administrator = new { FullName = department.Administrator == null ? null : department.Administrator.FullName },
                 Budget = department.Budget,
                 DepartmentID = department.DepartmentID,
                 Name = department.Name,
                 PersonID = department.PersonID,
-                StartDate = department.StartDate,
-                Administrator = new { FullName = department.Administrator == null ? null : department.Administrator.FullName }
+                StartDate = department.StartDate
             };
 
             Dictionary<string, object> res = new Dictionary<string, object>
@@ -132,6 +133,68 @@ namespace MvcBootstrap.Controllers
                     res["success"] = 1;
                     res["message"] = string.Format("{0} has been saved", department.Name);
                 }
+            }
+
+            catch (Exception ex)
+            {
+                res["error"] = 1;
+                res["message"] = ex.ToString();
+            }
+
+            return Json(res, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Edit(int id = 0)
+        {
+            Department department = repository.GetByID(id);
+            var o = new
+            {
+                Budget = department.Budget,
+                DepartmentID = department.DepartmentID,
+                Name = department.Name,
+                PersonID = department.PersonID,
+                RowVersion = Convert.ToBase64String(department.RowVersion),
+                StartDate = department.StartDate
+            };
+            return Json(o, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult Edit([Bind(Include = "DepartmentID, Name, Budget, StartDate, RowVersion, PersonID")] Department department)
+        {
+            Dictionary<string, object> res = new Dictionary<string, object>();
+
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    repository.Update(department);
+                    repository.Save();
+                    res["success"] = 1;
+                    res["message"] = string.Format("{0} has been saved", department.Name);
+                }
+            }
+
+            catch (Exception ex)
+            {
+                res["error"] = 1;
+                res["message"] = ex.ToString();
+            }
+
+            return Json(res, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult Delete(List<Department> departments)
+        {
+            Dictionary<string, object> res = new Dictionary<string, object>();
+
+            try
+            {
+                repository.Delete(departments);
+                repository.Save();
+                res["success"] = 1;
+                res["message"] = string.Format("{0} department(s) has been successfully deleted", departments.Count);
             }
 
             catch (Exception ex)

@@ -15,6 +15,7 @@ namespace MvcBootstrap.Abstract
         Department GetByID(int id);
         void Insert(Department department);
         void Delete(Department department);
+        void Delete(List<Department> departments);
         void Update(Department department);
         void Save();
     }

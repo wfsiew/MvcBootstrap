@@ -48,6 +48,8 @@
 
 @using (Html.BeginForm()) {
     @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.DepartmentID)
+    @Html.HiddenFor(model => model.RowVersion)
     <p>
         <button type="submit" class="btn btn-primary"><i class="icon-trash icon-white"></i>Delete</button>
         <a class="btn btn-default" href="@Url.Action("Index")"><i class="icon-arrow-left icon-white"></i>Cancel</a>

@@ -414,10 +414,10 @@ function DepartmentCtrl($scope, $http, Page, Menu) {
 
         var list = $scope.model;
         var lx = _.where(list, { selected: true });
-        var ids = _.map(lx, function (o) {
-            return o.PersonID;
+        var departments = _.map(lx, function (o) {
+            return { DepartmentID: o.DepartmentID, RowVersion: o.RowVersion };
         });
-        $http.post('/Ngdepartment/Delete', { ids: ids }).success(function (data) {
+        $http.post('/Ngdepartment/Delete', { departments: departments }).success(function (data) {
             if (data.success == 1) {
                 Page.setMessage(data.message);
                 $scope.message = _.clone(Page.message());
@@ -434,8 +434,8 @@ function DepartmentCtrl($scope, $http, Page, Menu) {
     }
 
     $scope.removeItem = function (o) {
-        var ids = [o.PersonID];
-        $http.post('/Ngdepartment/Delete', { ids: ids }).success(function (data) {
+        var departments = [{ DepartmentID: o.DepartmentID, RowVersion: o.RowVersion }];
+        $http.post('/Ngdepartment/Delete', { departments: departments }).success(function (data) {
             if (data.success == 1) {
                 Page.setMessage(data.message);
                 $scope.message = _.clone(Page.message());
@@ -474,6 +474,56 @@ function DepartmentCreateCtrl($scope, $http, $timeout, Page, Menu) {
         };
 
         $http.post('/Ngdepartment/Create', o).success(function (data) {
+            if (data.success == 1) {
+                Page.setMessage(data.message);
+                window.location.href = '#/departments';
+            }
+
+            else if (data.error == 1) {
+                $scope.error = true;
+                $scope.errorText = data.message;
+            }
+        });
+    }
+
+    $scope.open = function () {
+        $timeout(function () {
+            $scope.opened = true;
+        });
+    }
+
+    $scope.dismissAlert = function () {
+        $scope.error = false;
+    }
+
+    $http.get('/Ngdepartment/Instructors').success(function (data) {
+        $scope.PersonIDList = data;
+    });
+}
+
+function DepartmentEditCtrl($scope, $http, $routeParams, $timeout, Page, Menu) {
+    Page.setTitle('Edit');
+    Menu.setMenu('departments');
+
+    $scope.title = 'Edit';
+    $scope.action = 'Save';
+
+    $http.get('/Ngdepartment/Edit/' + $routeParams.id).success(function (data) {
+        $scope.model = data;
+        $scope.model.StartDate = utils.getDate(data.StartDate);
+    });
+
+    $scope.save = function () {
+        var o = {
+            DepartmentID: $scope.model.DepartmentID,
+            RowVersion: $scope.model.RowVersion,
+            Name: $scope.model.Name,
+            Budget: $scope.model.Budget,
+            StartDate: utils.getDateStr($scope.model.StartDate),
+            PersonID: $scope.model.PersonID
+        };
+
+        $http.post('/Ngdepartment/Edit', o).success(function (data) {
             if (data.success == 1) {
                 Page.setMessage(data.message);
                 window.location.href = '#/departments';

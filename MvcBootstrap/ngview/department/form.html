@@ -46,7 +46,8 @@
                     <select id="PersonID" class="input-xxlarge" name="PersonID" data-val-number="The field Administrator must be a number." 
                         data-val="true"
                         ng-model="model.PersonID">
-                        <option ng-repeat="o in PersonIDList" value="{{o.PersonID}}">{{o.FullName}}</option>
+                        <option value></option>
+                        <option ng-repeat="o in PersonIDList" value="{{o.PersonID}}" ng-selected="o.PersonID == model.PersonID">{{o.FullName}}</option>
                     </select>
                     <span class="field-validation-valid label label-important" data-valmsg-replace="true" data-valmsg-for="PersonID"></span>
                 </div>
@@ -54,7 +55,7 @@
             <div class="control-group">
                 <div class="controls">
                     <button type="button" class="btn btn-primary" ng-click="save()"><i class="icon-ok icon-white"></i> {{action}}</button>
-                    <a class="btn btn-default" href="#/students"><i class="icon-arrow-left icon-white"></i> Cancel</a>
+                    <a class="btn btn-default" href="#/departments"><i class="icon-arrow-left icon-white"></i> Cancel</a>
                 </div>
             </div>
         </fieldset>

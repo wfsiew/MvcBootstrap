@@ -47,6 +47,14 @@ namespace MvcBootstrap.Concrete
             context.Entry(department).State = EntityState.Deleted;
         }
 
+        public void Delete(List<Department> departments)
+        {
+            foreach (Department department in departments)
+            {
+                context.Entry(department).State = EntityState.Deleted;
+            }
+        }
+
         public void Update(Department department)
         {
             context.Entry(department).State = EntityState.Modified;
