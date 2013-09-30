@@ -48,6 +48,15 @@ namespace MvcBootstrap.Concrete
             context.Entry(course).State = EntityState.Deleted;
         }
 
+        public void Delete(List<int> ids)
+        {
+            foreach (int courseID in ids)
+            {
+                Course course = new Course { CourseID = courseID };
+                context.Entry(course).State = EntityState.Deleted;
+            }
+        }
+
         public void Update(Course course)
         {
             context.Entry(course).State = EntityState.Modified;

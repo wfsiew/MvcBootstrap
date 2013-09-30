@@ -3,30 +3,30 @@
 <div class="well">
     <form class="form-horizontal" role="form">
         <fieldset>
-            <legend>Department</legend>
+            <legend>Course</legend>
 
+            <div class="control-group">
+                <label class="control-label">Number</label>
+                <div class="controls">
+                    {{model.CourseID}}
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Title</label>
+                <div class="controls">
+                    {{model.Title}}
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Credits</label>
+                <div class="controls">
+                    {{model.Credits}}
+                </div>
+            </div>
             <div class="control-group">
                 <label class="control-label">Name</label>
                 <div class="controls">
-                    {{model.Name}}
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label">Budget</label>
-                <div class="controls">
-                    {{model.Budget | currency}}
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label">Start Date</label>
-                <div class="controls">
-                    {{model.StartDate | datefilter | date:'dd/MM/yyyy'}}
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label">Administrator</label>
-                <div class="controls">
-                    {{model.Administrator.FullName}}
+                    {{model.Department.Name}}
                 </div>
             </div>
         </fieldset>
@@ -36,8 +36,8 @@
 <div class="navbar">
     <div class="navbar-inner">
         <ul class="nav">
-            <li><a href="#/departments/edit/{{model.DepartmentID}}"><i class="icon-pencil icon-white"></i> Edit</a></li>
-            <li><a href="#/departments"><i class="icon-arrow-left icon-white"></i> Back to List</a></li>
+            <li><a href="#/courses/edit/{{model.CourseID}}"><i class="icon-pencil icon-white"></i> Edit</a></li>
+            <li><a href="#/courses"><i class="icon-arrow-left icon-white"></i> Back to List</a></li>
         </ul>
     </div>
 </div>

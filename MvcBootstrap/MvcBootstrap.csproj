@@ -155,6 +155,11 @@
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\Ng\Controllers\CourseController.cs" />
+    <Compile Include="Areas\Ng\Controllers\DepartmentController.cs" />
+    <Compile Include="Areas\Ng\Controllers\NgController.cs" />
+    <Compile Include="Areas\Ng\Controllers\StudentController.cs" />
+    <Compile Include="Areas\Ng\NgAreaRegistration.cs" />
     <Compile Include="Concrete\CourseRepository.cs" />
     <Compile Include="Concrete\DepartmentRepository.cs" />
     <Compile Include="Concrete\GenericRepository.cs" />
@@ -166,9 +171,6 @@
     <Compile Include="Controllers\DepartmentController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InstructorController.cs" />
-    <Compile Include="Controllers\NgController.cs" />
-    <Compile Include="Controllers\NgdepartmentController.cs" />
-    <Compile Include="Controllers\NgstudentController.cs" />
     <Compile Include="Controllers\StudentController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -285,7 +287,12 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Areas\Ng\Views\Web.config" />
+    <Content Include="Areas\Ng\Views\Ng\Index.cshtml" />
     <None Include="Scripts\jquery-1.9.1.intellisense.js" />
+    <Content Include="ngview\course\details.html" />
+    <Content Include="ngview\course\form.html" />
+    <Content Include="ngview\course\index.html" />
     <Content Include="ngview\department\details.html" />
     <Content Include="ngview\department\form.html" />
     <Content Include="ngview\department\index.html" />
@@ -366,6 +373,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\Ng\Models\" />
+    <Folder Include="Areas\Ng\Views\Shared\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

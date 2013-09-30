@@ -11,13 +11,13 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace MvcBootstrap.Controllers
+namespace MvcBootstrap.Areas.Ng.Controllers
 {
-    public class NgdepartmentController : Controller
+    public class DepartmentController : Controller
     {
         private IDepartmentRepository repository;
 
-        public NgdepartmentController(IDepartmentRepository repository)
+        public DepartmentController(IDepartmentRepository repository)
         {
             this.repository = repository;
         }
@@ -154,7 +154,8 @@ namespace MvcBootstrap.Controllers
                 Name = department.Name,
                 PersonID = department.PersonID,
                 RowVersion = Convert.ToBase64String(department.RowVersion),
-                StartDate = department.StartDate
+                StartDate = department.StartDate,
+                PersonIDList = GetInstructors()
             };
             return Json(o, JsonRequestBehavior.AllowGet);
         }
@@ -208,9 +209,7 @@ namespace MvcBootstrap.Controllers
 
         public JsonResult Instructors()
         {
-            IOrderedQueryable<Instructor> instructorsQuery = repository.Context.Instructors.OrderBy(x => x.LastName);
-            List<Instructor> l = instructorsQuery.ToList();
-            var o = l.Select(x => new { PersonID = x.PersonID, FullName = x.FullName });
+            object o = GetInstructors();
             return Json(o, JsonRequestBehavior.AllowGet);
         }
 
@@ -218,6 +217,14 @@ namespace MvcBootstrap.Controllers
         {
             repository.Dispose();
             base.Dispose(disposing);
+        }
+
+        private object GetInstructors()
+        {
+            IOrderedQueryable<Instructor> instructorsQuery = repository.Context.Instructors.OrderBy(x => x.LastName);
+            List<Instructor> l = instructorsQuery.ToList();
+            var o = l.Select(x => new { PersonID = x.PersonID, FullName = x.FullName });
+            return o;
         }
     }
 }

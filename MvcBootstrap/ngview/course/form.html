@@ -1,0 +1,66 @@
+﻿<h2>{{title}}</h2>
+
+<div class="well">
+    <form name="studentform" method="post" class="form-horizontal">
+        <ng-include src="'ngview/shared/alert.html'"></ng-include>
+
+        <fieldset>
+            <legend>Course</legend>
+
+            <div class="control-group">
+                <label class="control-label">Number</label>
+                <div class="controls">
+                    <input id="CourseID" class="input-xxlarge" type="text" x-webkit-speech="x-webkit-speech" value="" placeholder="Number" 
+                        name="CourseID" data-val-required="The Number field is required." 
+                        data-val-number="The field Number must be a number." 
+                        data-val="true"
+                        ng-model="model.CourseID">
+                    <span class="field-validation-valid label label-important" data-valmsg-replace="true" data-valmsg-for="CourseID"></span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Title</label>
+                <div class="controls">
+                    <input id="Title" class="input-xxlarge" type="text" x-webkit-speech="x-webkit-speech" value="" placeholder="Title" 
+                        name="Title" data-val-length-max="50" 
+                        data-val-length="The field Title must be a string with a maximum length of 50." 
+                        data-val="true"
+                        ng-model="model.Title">
+                    <span class="field-validation-valid label label-important" data-valmsg-replace="true" data-valmsg-for="Title"></span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Credits</label>
+                <div class="controls">
+                    <input id="Credits" class="input-xxlarge" type="text" x-webkit-speech="x-webkit-speech" value="" placeholder="Credits" 
+                        name="Credits" data-val-required="The Credits field is required." 
+                        data-val-range-min="0" data-val-range-max="5" 
+                        data-val-range="The field Credits must be between 0 and 5." 
+                        data-val-number="The field Credits must be a number." 
+                        data-val="true"
+                        ng-model="model.Credits">
+                    <span class="field-validation-valid label label-important" data-valmsg-replace="true" data-valmsg-for="Credits"></span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Department</label>
+                <div class="controls">
+                    <select id="DepartmentID" class="input-xxlarge" name="DepartmentID" data-val-required="The Department field is required." 
+                        data-val-number="The field Department must be a number." 
+                        data-val="true"
+                        ng-model="model.DepartmentID">
+                        <option value></option>
+                        <option ng-repeat="o in DepartmentIDList" value="{{o.DepartmentID}}" ng-selected="o.DepartmentID == model.DepartmentID">{{o.Name}}</option>
+                    </select>
+                    <span class="field-validation-valid label label-important" data-valmsg-replace="true" data-valmsg-for="DepartmentID"></span>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <button type="button" class="btn btn-primary" ng-click="save()"><i class="icon-ok icon-white"></i> {{action}}</button>
+                    <a class="btn btn-default" href="#/courses"><i class="icon-arrow-left icon-white"></i> Cancel</a>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>

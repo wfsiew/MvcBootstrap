@@ -6,18 +6,18 @@ using MvcBootstrap.Models;
 using PagedList;
 using System;
 using System.Collections.Generic;
-using System.Data;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace MvcBootstrap.Controllers
+namespace MvcBootstrap.Areas.Ng.Controllers
 {
-    public class NgstudentController : Controller
+    public class CourseController : Controller
     {
-        private IStudentRepository repository;
+        private ICourseRepository repository;
 
-        public NgstudentController(IStudentRepository repository)
+        public CourseController(ICourseRepository repository)
         {
             this.repository = repository;
         }
@@ -29,51 +29,59 @@ namespace MvcBootstrap.Controllers
             if (searchString != null)
                 page = 1;
 
-            var students = repository.GetStudents();
+            var courses = repository.GetCourses().Include(c => c.Department);
 
             if (!string.IsNullOrEmpty(keyword))
             {
-                students = students.Where(x => x.LastName.ToUpper().Contains(keyword) ||
-                    x.FirstMidName.ToUpper().Contains(keyword));
+                courses = courses.Where(x => x.Title.Contains(keyword) ||
+                    x.Department.Name.Contains(keyword));
             }
 
             switch (sortOrder)
             {
-                case "Name_desc":
-                    students = students.OrderByDescending(x => x.LastName);
+                case "Title_desc":
+                    courses = courses.OrderByDescending(x => x.Title);
                     break;
 
-                case "FirstName":
-                    students = students.OrderBy(x => x.FirstMidName);
+                case "Dept":
+                    courses = courses.OrderBy(x => x.Department.Name);
                     break;
 
-                case "FirstName_desc":
-                    students = students.OrderByDescending(x => x.FirstMidName);
+                case "Dept_desc":
+                    courses = courses.OrderByDescending(x => x.Department.Name);
                     break;
 
-                case "Date":
-                    students = students.OrderBy(x => x.EnrollmentDate);
+                case "CourseID":
+                    courses = courses.OrderBy(x => x.CourseID);
                     break;
 
-                case "Date_desc":
-                    students = students.OrderByDescending(x => x.EnrollmentDate);
+                case "CourseID_desc":
+                    courses = courses.OrderByDescending(x => x.CourseID);
+                    break;
+
+                case "Credits":
+                    courses = courses.OrderBy(x => x.Credits);
+                    break;
+
+                case "Credits_desc":
+                    courses = courses.OrderByDescending(x => x.Credits);
                     break;
 
                 default:
-                    students = students.OrderBy(x => x.LastName);
+                    courses = courses.OrderBy(x => x.Title);
                     break;
             }
 
             int pageSize = Constants.PAGE_SIZE;
             int pageNumber = (page ?? 1);
 
-            var l = students.ToPagedList(pageNumber, pageSize);
+            var l = courses.ToPagedList(pageNumber, pageSize);
             var lx = l.Select(x => new
             {
-                EnrollmentDate = x.EnrollmentDate,
-                FirstMidName = x.FirstMidName,
-                LastName = x.LastName,
-                PersonID = x.PersonID
+                CourseID = x.CourseID,
+                Credits = x.Credits,
+                Department = new { Name = x.Department == null ? null : x.Department.Name },
+                Title = x.Title
             });
             Pager pager = new Pager(l.TotalItemCount, l.PageNumber, l.PageSize);
             Dictionary<string, object> res = new Dictionary<string, object>
@@ -87,34 +95,25 @@ namespace MvcBootstrap.Controllers
 
         public ActionResult Details(int id = 0)
         {
-            Student student = repository.GetByID(id);
-            var enrollments = student.Enrollments.Select(x => new
-            {
-                Course = new Course { Title = x.Course.Title },
-                Grade = x.Grade == null ? Enrollment.NO_GRADE : Enum.GetName(typeof(Grade), x.Grade)
-            });
-
+            Course course = repository.GetByID(id);
             var model = new
             {
-                EnrollmentDate = student.EnrollmentDate,
-                FirstMidName = student.FirstMidName,
-                FullName = student.FullName,
-                LastName = student.LastName,
-                PersonID = student.PersonID,
-                Enrollments = enrollments
+                CourseID = course.CourseID,
+                Credits = course.Credits,
+                Department = new { Name = course.Department == null ? null : course.Department.Name },
+                Title = course.Title
             };
 
             Dictionary<string, object> res = new Dictionary<string, object>
             {
-                { "model", model },
-                { "enrollments", enrollments }
+                { "model", model }
             };
 
             return Json(res, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public ActionResult Create([Bind(Include = "LastName, FirstMidName, EnrollmentDate")] Student student)
+        public ActionResult Create([Bind(Include = "CourseID,Title,Credits,DepartmentID")] Course course)
         {
             Dictionary<string, object> res = new Dictionary<string, object>();
 
@@ -123,10 +122,15 @@ namespace MvcBootstrap.Controllers
                 //throw new Exception("Error" + DateTime.Now);
                 if (ModelState.IsValid)
                 {
-                    repository.Insert(student);
+                    repository.Insert(course);
                     repository.Save();
                     res["success"] = 1;
-                    res["message"] = string.Format("{0} has been saved", student.FullName);
+                    res["message"] = string.Format("{0} has been saved", course.Title);
+                }
+
+                else
+                {
+                    return Json(ModelState, JsonRequestBehavior.AllowGet);
                 }
             }
 
@@ -141,19 +145,20 @@ namespace MvcBootstrap.Controllers
 
         public ActionResult Edit(int id = 0)
         {
-            Student student = repository.GetByID(id);
-            Student o = new Student
+            Course course = repository.GetByID(id);
+            var o = new
             {
-                EnrollmentDate = student.EnrollmentDate,
-                FirstMidName = student.FirstMidName,
-                LastName = student.LastName,
-                PersonID = student.PersonID
+                CourseID = course.CourseID,
+                Credits = course.Credits,
+                DepartmentID = course.DepartmentID,
+                Title = course.Title,
+                DepartmentIDList = GetDepartments()
             };
             return Json(o, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public ActionResult Edit(Student student)
+        public ActionResult Edit(Course course)
         {
             Dictionary<string, object> res = new Dictionary<string, object>();
 
@@ -161,10 +166,10 @@ namespace MvcBootstrap.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    repository.Update(student);
+                    repository.Update(course);
                     repository.Save();
                     res["success"] = 1;
-                    res["message"] = string.Format("{0} has been saved", student.FullName);
+                    res["message"] = string.Format("{0} has been saved", course.Title);
                 }
             }
 
@@ -187,7 +192,7 @@ namespace MvcBootstrap.Controllers
                 repository.Delete(ids);
                 repository.Save();
                 res["success"] = 1;
-                res["message"] = string.Format("{0} student(s) has been successfully deleted", ids.Count);
+                res["message"] = string.Format("{0} course(s) has been successfully deleted", ids.Count);
             }
 
             catch (Exception ex)
@@ -197,6 +202,20 @@ namespace MvcBootstrap.Controllers
             }
 
             return Json(res, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult Departments()
+        {
+            object o = GetDepartments();
+            return Json(o, JsonRequestBehavior.AllowGet);
+        }
+
+        private object GetDepartments()
+        {
+            IOrderedQueryable<Department> departmentsQuery = repository.Context.Departments.OrderBy(x => x.Name);
+            List<Department> l = departmentsQuery.ToList();
+            var o = l.Select(x => new { DepartmentID = x.DepartmentID, Name = x.Name });
+            return o;
         }
 
         protected override void Dispose(bool disposing)

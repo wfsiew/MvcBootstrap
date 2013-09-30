@@ -15,6 +15,7 @@ namespace MvcBootstrap.Abstract
         Course GetByID(int id);
         void Insert(Course course);
         void Delete(int id);
+        void Delete(List<int> ids);
         void Update(Course course);
         void Save();
     }

@@ -53,7 +53,7 @@ function StudentCtrl($scope, $http, Page, Menu) {
             sortOrder: $scope.currentSort,
             page: page
         };
-        $http.get('/Ngstudent/Index', { params: params }).success(function (data) {
+        $http.get('/Ng/Student/Index', { params: params }).success(function (data) {
             $scope.pager = data.pager;
             $scope.model = data.model;
         });
@@ -148,7 +148,7 @@ function StudentCtrl($scope, $http, Page, Menu) {
         var ids = _.map(lx, function (o) {
             return o.PersonID;
         });
-        $http.post('/Ngstudent/Delete', { ids: ids }).success(function (data) {
+        $http.post('/Ng/Student/Delete', { ids: ids }).success(function (data) {
             if (data.success == 1) {
                 Page.setMessage(data.message);
                 $scope.message = _.clone(Page.message());
@@ -166,7 +166,7 @@ function StudentCtrl($scope, $http, Page, Menu) {
 
     $scope.removeItem = function (o) {
         var ids = [o.PersonID];
-        $http.post('/Ngstudent/Delete', { ids: ids }).success(function (data) {
+        $http.post('/Ng/Student/Delete', { ids: ids }).success(function (data) {
             if (data.success == 1) {
                 Page.setMessage(data.message);
                 $scope.message = _.clone(Page.message());
@@ -203,7 +203,7 @@ function StudentCreateCtrl($scope, $http, $timeout, Page, Menu) {
             EnrollmentDate: utils.getDateStr($scope.model.EnrollmentDate)
         };
 
-        $http.post('/Ngstudent/Create', o).success(function (data) {
+        $http.post('/Ng/Student/Create', o).success(function (data) {
             if (data.success == 1) {
                 Page.setMessage(data.message);
                 window.location.href = '#/students';
@@ -234,7 +234,7 @@ function StudentEditCtrl($scope, $http, $routeParams, $timeout, Page, Menu) {
     $scope.title = 'Edit';
     $scope.action = 'Save';
 
-    $http.get('/Ngstudent/Edit/' + $routeParams.id).success(function (data) {
+    $http.get('/Ng/Student/Edit/' + $routeParams.id).success(function (data) {
         $scope.model = data;
         $scope.model.EnrollmentDate = utils.getDate(data.EnrollmentDate);
     });
@@ -247,7 +247,7 @@ function StudentEditCtrl($scope, $http, $routeParams, $timeout, Page, Menu) {
             EnrollmentDate: utils.getDateStr($scope.model.EnrollmentDate)
         };
 
-        $http.post('/Ngstudent/Edit', o).success(function (data) {
+        $http.post('/Ng/Student/Edit', o).success(function (data) {
             if (data.success == 1) {
                 Page.setMessage(data.message);
                 window.location.href = '#/students';
@@ -275,12 +275,274 @@ function StudentDetailsCtrl($scope, $http, $routeParams, Page, Menu) {
     Page.setTitle('Details');
     Menu.setMenu('students');
 
-    $http.get('/Ngstudent/Details/' + $routeParams.id).success(function (data) {
+    $http.get('/Ng/Student/Details/' + $routeParams.id).success(function (data) {
         $scope.model = data.model;
         $scope.enrollments = data.enrollments;
     });
 }
 // endregion students
+
+//region courses
+function CourseCtrl($scope, $http, Page, Menu) {
+    Page.setTitle('Courses');
+    Menu.setMenu('courses');
+
+    $scope.selected = {
+        all: false,
+        count: 0,
+        message: function () {
+            return this.count + " item" + (this.count > 1 ? 's' : '') + " selected";
+        },
+        reset: function () {
+            this.all = false;
+            this.count = 0;
+        }
+    };
+
+    if (Page.message().show) {
+        $scope.message = _.clone(Page.message());
+        Page.resetMessage();
+    }
+
+    $scope.find = function () {
+        $scope.gotoPage(1);
+    }
+
+    $scope.gotoPage = function (page) {
+        var params = {
+            SearchString: $scope.SearchString,
+            sortOrder: $scope.currentSort,
+            page: page
+        };
+        $http.get('/Ng/Course/Index', { params: params }).success(function (data) {
+            $scope.pager = data.pager;
+            $scope.model = data.model;
+        });
+    }
+
+    $scope.sort = function (a) {
+        if (a == 'Title') {
+            if ($scope.currentSort == null || $scope.currentSort == '')
+                $scope.currentSort = 'Title_desc';
+
+            else
+                $scope.currentSort = '';
+        }
+
+        else if (a == 'Dept') {
+            if ($scope.currentSort == 'Dept')
+                $scope.currentSort = 'Dept_desc';
+
+            else
+                $scope.currentSort = 'Dept';
+        }
+
+        else if (a == 'CourseID') {
+            if ($scope.currentSort == 'CourseID')
+                $scope.currentSort = 'CourseID_desc';
+
+            else
+                $scope.currentSort = 'CourseID';
+        }
+
+        else if (a == 'Credits') {
+            if ($scope.currentSort == 'Credits')
+                $scope.currentSort = 'Credits_desc';
+
+            else
+                $scope.currentSort = 'Credits';
+        }
+
+        $scope.gotoPage($scope.pager.PageNum);
+    }
+
+    $scope.getSortCss = function (a) {
+        var up = 'icon-chevron-up icon-white';
+        var down = 'icon-chevron-down icon-white';
+
+        if (($scope.currentSort == null || $scope.currentSort == '') && a == 'Name')
+            return up;
+
+        if ($scope.currentSort.indexOf(a) == 0) {
+            if ($scope.currentSort.indexOf('desc') > 0)
+                return down;
+
+            else
+                return up;
+        }
+
+        return null;
+    }
+
+    $scope.selectRow = function ($event, o) {
+        $event.stopPropagation();
+
+        if (o.selected)
+            ++$scope.selected.count;
+
+        else
+            --$scope.selected.count;
+    }
+
+    $scope.selectAll = function ($event) {
+        $event.stopPropagation();
+
+        var list = null;
+        var n = 0;
+
+        if ($scope.model != null)
+            list = $scope.model;
+
+        if (list != null)
+            n = list.length;
+
+        for (var i = 0; i < n; i++) {
+            var o = list[i];
+            o.selected = $scope.selected.all;
+        }
+
+        if ($scope.selected.all)
+            $scope.selected.count = n;
+
+        else
+            $scope.selected.count = 0;
+    }
+
+    $scope.removeItems = function () {
+        if ($scope.selected.count < 1)
+            return;
+
+        var list = $scope.model;
+        var lx = _.where(list, { selected: true });
+        var ids = _.map(lx, function (o) {
+            return o.CourseID;
+        });
+        $http.post('/Ng/Course/Delete', { ids: ids }).success(function (data) {
+            if (data.success == 1) {
+                Page.setMessage(data.message);
+                $scope.message = _.clone(Page.message());
+                Page.resetMessage();
+                $scope.selected.reset();
+                $scope.gotoPage($scope.pager.PageNum);
+            }
+
+            else if (data.error == 1) {
+                $scope.error = true;
+                $scope.errorText = data.message;
+            }
+        });
+    }
+
+    $scope.removeItem = function (o) {
+        var ids = [o.CourseID];
+        $http.post('/Ng/Course/Delete', { ids: ids }).success(function (data) {
+            if (data.success == 1) {
+                Page.setMessage(data.message);
+                $scope.message = _.clone(Page.message());
+                Page.resetMessage();
+                $scope.selected.reset();
+                $scope.gotoPage($scope.pager.PageNum);
+            }
+
+            else if (data.error == 1) {
+                $scope.error = true;
+                $scope.errorText = data.message;
+            }
+        });
+    }
+
+    $scope.dismissAlert = function () {
+        $scope.error = false;
+    }
+
+    $scope.gotoPage(1);
+}
+
+function CourseCreateCtrl($scope, $http, Page, Menu) {
+    Page.setTitle('Create');
+    Menu.setMenu('courses');
+
+    $scope.title = 'Create';
+    $scope.action = 'Create';
+
+    $scope.save = function () {
+        var o = {
+            CourseID: $scope.model.CourseID,
+            Title: $scope.model.Title,
+            Credits: $scope.model.Credits,
+            DepartmentID: $scope.model.DepartmentID
+        };
+
+        $http.post('/Ng/Course/Create', o).success(function (data) {
+            if (data.success == 1) {
+                Page.setMessage(data.message);
+                window.location.href = '#/courses';
+            }
+
+            else if (data.error == 1) {
+                $scope.error = true;
+                $scope.errorText = data.message;
+            }
+        });
+    }
+
+    $scope.dismissAlert = function () {
+        $scope.error = false;
+    }
+
+    $http.get('/Ng/Course/Departments').success(function (data) {
+        $scope.DepartmentIDList = data;
+    });
+}
+
+function CourseEditCtrl($scope, $http, $routeParams, $timeout, Page, Menu) {
+    Page.setTitle('Edit');
+    Menu.setMenu('courses');
+
+    $scope.title = 'Edit';
+    $scope.action = 'Save';
+
+    $http.get('/Ng/Course/Edit/' + $routeParams.id).success(function (data) {
+        $scope.model = data;
+        $scope.model.StartDate = utils.getDate(data.StartDate);
+        $scope.DepartmentIDList = data.DepartmentIDList;
+    });
+
+    $scope.save = function () {
+        var o = {
+            CourseID: $scope.model.CourseID,
+            Title: $scope.model.Title,
+            Credits: $scope.model.Credits,
+            DepartmentID: $scope.model.DepartmentID
+        };
+
+        $http.post('/Ng/Course/Edit', o).success(function (data) {
+            if (data.success == 1) {
+                Page.setMessage(data.message);
+                window.location.href = '#/courses';
+            }
+
+            else if (data.error == 1) {
+                $scope.error = true;
+                $scope.errorText = data.message;
+            }
+        });
+    }
+
+    $scope.dismissAlert = function () {
+        $scope.error = false;
+    }
+}
+
+function CourseDetailsCtrl($scope, $http, $routeParams, Page, Menu) {
+    Page.setTitle('Details');
+    Menu.setMenu('courses');
+
+    $http.get('/Ng/Course/Details/' + $routeParams.id).success(function (data) {
+        $scope.model = data.model;
+    });
+}
+//endregion courses
 
 // region departments
 function DepartmentCtrl($scope, $http, Page, Menu) {
@@ -314,7 +576,7 @@ function DepartmentCtrl($scope, $http, Page, Menu) {
             sortOrder: $scope.currentSort,
             page: page
         };
-        $http.get('/Ngdepartment/Index', { params: params }).success(function (data) {
+        $http.get('/Ng/Department/Index', { params: params }).success(function (data) {
             $scope.pager = data.pager;
             $scope.model = data.model;
         });
@@ -417,7 +679,7 @@ function DepartmentCtrl($scope, $http, Page, Menu) {
         var departments = _.map(lx, function (o) {
             return { DepartmentID: o.DepartmentID, RowVersion: o.RowVersion };
         });
-        $http.post('/Ngdepartment/Delete', { departments: departments }).success(function (data) {
+        $http.post('/Ng/Department/Delete', { departments: departments }).success(function (data) {
             if (data.success == 1) {
                 Page.setMessage(data.message);
                 $scope.message = _.clone(Page.message());
@@ -435,7 +697,7 @@ function DepartmentCtrl($scope, $http, Page, Menu) {
 
     $scope.removeItem = function (o) {
         var departments = [{ DepartmentID: o.DepartmentID, RowVersion: o.RowVersion }];
-        $http.post('/Ngdepartment/Delete', { departments: departments }).success(function (data) {
+        $http.post('/Ng/Department/Delete', { departments: departments }).success(function (data) {
             if (data.success == 1) {
                 Page.setMessage(data.message);
                 $scope.message = _.clone(Page.message());
@@ -473,7 +735,7 @@ function DepartmentCreateCtrl($scope, $http, $timeout, Page, Menu) {
             PersonID: $scope.model.PersonID
         };
 
-        $http.post('/Ngdepartment/Create', o).success(function (data) {
+        $http.post('/Ng/Department/Create', o).success(function (data) {
             if (data.success == 1) {
                 Page.setMessage(data.message);
                 window.location.href = '#/departments';
@@ -496,7 +758,7 @@ function DepartmentCreateCtrl($scope, $http, $timeout, Page, Menu) {
         $scope.error = false;
     }
 
-    $http.get('/Ngdepartment/Instructors').success(function (data) {
+    $http.get('/Ng/Department/Instructors').success(function (data) {
         $scope.PersonIDList = data;
     });
 }
@@ -508,9 +770,10 @@ function DepartmentEditCtrl($scope, $http, $routeParams, $timeout, Page, Menu) {
     $scope.title = 'Edit';
     $scope.action = 'Save';
 
-    $http.get('/Ngdepartment/Edit/' + $routeParams.id).success(function (data) {
+    $http.get('/Ng/Department/Edit/' + $routeParams.id).success(function (data) {
         $scope.model = data;
         $scope.model.StartDate = utils.getDate(data.StartDate);
+        $scope.PersonIDList = data.PersonIDList;
     });
 
     $scope.save = function () {
@@ -523,7 +786,7 @@ function DepartmentEditCtrl($scope, $http, $routeParams, $timeout, Page, Menu) {
             PersonID: $scope.model.PersonID
         };
 
-        $http.post('/Ngdepartment/Edit', o).success(function (data) {
+        $http.post('/Ng/Department/Edit', o).success(function (data) {
             if (data.success == 1) {
                 Page.setMessage(data.message);
                 window.location.href = '#/departments';
@@ -545,17 +808,13 @@ function DepartmentEditCtrl($scope, $http, $routeParams, $timeout, Page, Menu) {
     $scope.dismissAlert = function () {
         $scope.error = false;
     }
-
-    $http.get('/Ngdepartment/Instructors').success(function (data) {
-        $scope.PersonIDList = data;
-    });
 }
 
 function DepartmentDetailsCtrl($scope, $http, $routeParams, Page, Menu) {
     Page.setTitle('Details');
     Menu.setMenu('departments');
 
-    $http.get('/Ngdepartment/Details/' + $routeParams.id).success(function (data) {
+    $http.get('/Ng/Department/Details/' + $routeParams.id).success(function (data) {
         $scope.model = data.model;
     });
 }

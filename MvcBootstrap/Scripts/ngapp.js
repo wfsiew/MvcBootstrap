@@ -12,6 +12,10 @@ app.config(['$routeProvider', function ($routeProvider) {
         when('/students/create', { templateUrl: 'ngview/student/form.html', controller: StudentCreateCtrl }).
         when('/students/edit/:id', { templateUrl: 'ngview/student/form.html', controller: StudentEditCtrl }).
         when('/students/details/:id', { templateUrl: 'ngview/student/details.html', controller: StudentDetailsCtrl }).
+        when('/courses', { templateUrl: 'ngview/course/index.html', controller: CourseCtrl }).
+        when('/courses/create', { templateUrl: 'ngview/course/form.html', controller: CourseCreateCtrl }).
+        when('/courses/edit/:id', { templateUrl: 'ngview/course/form.html', controller: CourseEditCtrl }).
+        when('/courses/details/:id', { templateUrl: 'ngview/course/details.html', controller: CourseDetailsCtrl }).
         when('/departments', { templateUrl: 'ngview/department/index.html', controller: DepartmentCtrl }).
         when('/departments/create', { templateUrl: 'ngview/department/form.html', controller: DepartmentCreateCtrl }).
         when('/departments/edit/:id', { templateUrl: 'ngview/department/form.html', controller: DepartmentEditCtrl }).

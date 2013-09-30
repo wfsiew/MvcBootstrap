@@ -8,7 +8,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace MvcBootstrap.Controllers
+namespace MvcBootstrap.Areas.Ng.Controllers
 {
     public class NgController : Controller
     {
@@ -20,7 +20,7 @@ namespace MvcBootstrap.Controllers
         }
 
         //
-        // GET: /Ng/
+        // GET: /Ng/Ng/
 
         public ActionResult Index()
         {
