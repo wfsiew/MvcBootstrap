@@ -15,14 +15,12 @@ namespace MvcBootstrap.Models
 
         [RegularExpression(@"^[A-Z]+[a-zA-Z''-'\s]*$")]
         [Display(Name = "Last Name")]
-        [StringLength(50)]
-        [MinLength(1)]
+        [StringLength(50, MinimumLength = 1)]
         public string LastName { get; set; }
 
         [Column("FirstName")]
         [Display(Name = "First Name")]
-        [StringLength(50, ErrorMessage = "First name must be between 2 and 50 characters.")]
-        [MinLength(2)]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "First name must be between 2 and 50 characters.")]
         public string FirstMidName { get; set; }
 
         public string FullName

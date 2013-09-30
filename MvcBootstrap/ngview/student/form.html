@@ -1,7 +1,7 @@
 ﻿<h2>{{title}}</h2>
 
 <div class="well">
-    <form name="studentform" method="post" class="form-horizontal">
+    <form name="form" method="post" class="form-horizontal">
         <ng-include src="'ngview/shared/alert.html'"></ng-include>
 
         <fieldset>
@@ -10,38 +10,38 @@
             <div class="control-group">
                 <label class="control-label">Last Name</label>
                 <div class="controls">
-                    <input id="LastName" type="text" class="input-xxlarge" x-webkit-speech="x-webkit-speech" value="" placeholder="Last Name" 
-                        name="LastName" data-val-regex-pattern="^[A-Z]+[a-zA-Z''-'\s]*$" 
-                        data-val-regex="The field Last Name must match the regular expression '^[A-Z]+[a-zA-Z''-'\s]*$'." 
-                        data-val-length-max="50" data-val-length="The field Last Name must be a string with a maximum length of 50." 
-                        data-val="true"
-                        ng-model="model.LastName">
-                    <span class="field-validation-valid label label-important" data-valmsg-replace="true" data-valmsg-for="LastName"></span>
+                    <input id="LastName" type="text" value="" placeholder="Last Name" name="LastName"
+                        x-webkit-speech="x-webkit-speech"
+                        ng-model="model.LastName"
+                        ng-pattern=/^[A-Z]+[a-zA-Z''-'\s]*$/
+                        ng-minlength="1"
+                        ng-maxlength="50">
+                    <span class="label label-important" ng-show="form.LastName.$error.minlength || form.LastName.$error.maxlength">The field Last Name must be a string with a minimum length of 1 and a maximum length of 50.</span>
+                    <span class="label label-important" ng-show="form.LastName.$error.pattern">The field Last Name must match the regular expression '^[A-Z]+[a-zA-Z''-'\s]*$'.</span>
                 </div>
             </div>
             <div class="control-group">
                 <label class="control-label">First Name</label>
                 <div class="controls">
-                    <input id="FirstMidName" type="text" class="input-xxlarge" x-webkit-speech="x-webkit-speech" value="" placeholder="First Name" 
-                        name="FirstMidName" data-val-length-max="50" 
-                        data-val-length="First name must be between 2 and 50 characters." 
-                        data-val="true"
-                        ng-model="model.FirstMidName">
-                    <span class="field-validation-valid label label-important" data-valmsg-replace="true" data-valmsg-for="FirstMidName"></span>
+                    <input id="FirstMidName" type="text" value="" placeholder="First Name" name="FirstMidName"
+                        x-webkit-speech="x-webkit-speech"
+                        ng-model="model.FirstMidName"
+                        ng-minlength="2"
+                        ng-maxlength="50">
+                    <span class="label label-important" ng-show="form.FirstMidName.$error.minlength || form.FirstMidName.$error.maxlength">First name must be between 2 and 50 characters.</span>
                 </div>
             </div>
             <div class="control-group">
                 <label class="control-label">Enrollment Date</label>
                 <div class="controls">
-                    <input id="EnrollmentDate" type="text" class="input-xxlarge" x-webkit-speech="x-webkit-speech" value="" placeholder="Enrollment Date" 
-                        name="EnrollmentDate" data-val-required="The Enrollment Date field is required." 
-                        data-val-date="The field Enrollment Date must be a date." 
-                        data-val="true"
+                    <input id="EnrollmentDate" type="text" value="" placeholder="Enrollment Date" name="EnrollmentDate" 
+                        x-webkit-speech="x-webkit-speech"
                         ng-model="model.EnrollmentDate"
                         datepicker-popup="yyyy-MM-dd"
-                        is-open="opened">
+                        is-open="opened"
+                        required>
                     <button class="btn" ng-click="open()"><i class="icon-calendar"></i></button>
-                    <span class="field-validation-valid label label-important" data-valmsg-replace="true" data-valmsg-for="EnrollmentDate"></span>
+                    <span class="label label-important" ng-show="form.EnrollmentDate.$error.required">The Enrollment Date field is required.</span>
                 </div>
             </div>
             <div class="control-group">

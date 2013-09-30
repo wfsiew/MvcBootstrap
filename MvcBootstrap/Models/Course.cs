@@ -13,8 +13,7 @@ namespace MvcBootstrap.Models
         [Display(Name = "Number")]
         public int CourseID { get; set; }
 
-        [StringLength(50)]
-        [MinLength(3)]
+        [StringLength(50, MinimumLength = 3)]
         public string Title { get; set; }
 
         [Range(0, 5)]

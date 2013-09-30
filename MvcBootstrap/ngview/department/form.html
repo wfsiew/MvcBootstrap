@@ -1,7 +1,7 @@
 ﻿<h2>{{title}}</h2>
 
 <div class="well">
-    <form name="departmentform" method="post" class="form-horizontal">
+    <form name="form" method="post" class="form-horizontal">
         <ng-include src="'ngview/shared/alert.html'"></ng-include>
 
         <fieldset>
@@ -10,46 +10,47 @@
             <div class="control-group">
                 <label class="control-label">Name</label>
                 <div class="controls">
-                    <input id="Name" class="input-xxlarge" type="text" x-webkit-speech="x-webkit-speech" value="" placeholder="Name" 
-                        name="Name" data-val-length-max="50" data-val-length="The field Name must be a string with a maximum length of 50." 
-                        data-val="true"
-                        ng-model="model.Name">
-                    <span class="field-validation-valid label label-important" data-valmsg-replace="true" data-valmsg-for="Name"></span>
+                    <input id="Name" type="text" value="" placeholder="Name" name="Name"
+                        x-webkit-speech="x-webkit-speech"
+                        ng-model="model.Name"
+                        ng-minlength="3"
+                        ng-maxlength="50">
+                    <span class="label label-important" ng-show="form.Name.$error.minlength || form.Name.$error.maxlength">The field Name must be a string with a minimum length of 3 and a maximum length of 50.</span>
                 </div>
             </div>
             <div class="control-group">
                 <label class="control-label">Budget</label>
                 <div class="controls">
-                    <input id="Budget" class="input-xxlarge" type="text" x-webkit-speech="x-webkit-speech" value="" placeholder="Budget" 
-                        name="Budget" data-val-required="The Budget field is required." data-val-number="The field Budget must be a number." 
-                        data-val="true"
-                        ng-model="model.Budget">
-                    <span class="field-validation-valid label label-important" data-valmsg-replace="true" data-valmsg-for="Budget"></span>
+                    <input id="Budget" type="text" value="" placeholder="Budget" name="Budget"
+                        x-webkit-speech="x-webkit-speech"
+                        ng-model="model.Budget"
+                        required
+                        ng-pattern=/^[0-9]$/>
+                    <span class="label label-important" ng-show="form.Budget.$error.required">The Budget field is required.</span>
+                    <span class="label label-important" ng-show="form.Budget.$error.pattern">The field Budget must be a number.</span>
                 </div>
             </div>
             <div class="control-group">
                 <label class="control-label">Start Date</label>
                 <div class="controls">
-                    <input id="StartDate" class="input-xxlarge" type="text" x-webkit-speech="x-webkit-speech" value="" placeholder="Start Date" 
-                        name="StartDate" data-val-required="The StartDate field is required." 
-                        data-val-date="The field StartDate must be a date." data-val="true"
+                    <input id="StartDate" type="text" value="" placeholder="Start Date" name="StartDate" 
+                        x-webkit-speech="x-webkit-speech"
                         ng-model="model.StartDate"
                         datepicker-popup="yyyy-MM-dd"
-                        is-open="opened">
+                        is-open="opened"
+                        required>
                     <button class="btn" ng-click="open()"><i class="icon-calendar"></i></button>
-                    <span class="field-validation-valid label label-important" data-valmsg-replace="true" data-valmsg-for="StartDate"></span>
+                    <span class="label label-important" ng-show="form.StartDate.$error.required">The StartDate field is required.</span>
                 </div>
             </div>
             <div class="control-group">
                 <label class="control-label">Administrator</label>
                 <div class="controls">
-                    <select id="PersonID" class="input-xxlarge" name="PersonID" data-val-number="The field Administrator must be a number." 
-                        data-val="true"
+                    <select id="PersonID" name="PersonID" 
                         ng-model="model.PersonID">
                         <option value></option>
                         <option ng-repeat="o in PersonIDList" value="{{o.PersonID}}" ng-selected="o.PersonID == model.PersonID">{{o.FullName}}</option>
                     </select>
-                    <span class="field-validation-valid label label-important" data-valmsg-replace="true" data-valmsg-for="PersonID"></span>
                 </div>
             </div>
             <div class="control-group">
