@@ -157,6 +157,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Ng\Controllers\CourseController.cs" />
     <Compile Include="Areas\Ng\Controllers\DepartmentController.cs" />
+    <Compile Include="Areas\Ng\Controllers\InstructorController.cs" />
     <Compile Include="Areas\Ng\Controllers\NgController.cs" />
     <Compile Include="Areas\Ng\Controllers\StudentController.cs" />
     <Compile Include="Areas\Ng\NgAreaRegistration.cs" />

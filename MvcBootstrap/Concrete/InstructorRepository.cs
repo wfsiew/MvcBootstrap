@@ -55,6 +55,19 @@ namespace MvcBootstrap.Concrete
             context.Instructors.Remove(instructor);
         }
 
+        public void Delete(List<int> ids)
+        {
+            IQueryable<Instructor> instructors = context.Instructors
+                .Include(i => i.OfficeAssignment)
+                .Where(i => ids.Contains(i.PersonID));
+
+            foreach (Instructor instructor in instructors)
+            {
+                instructor.OfficeAssignment = null;
+                context.Instructors.Remove(instructor);
+            }
+        }
+
         public void Update(Instructor instructor, string[] selectedCourses)
         {
             if (string.IsNullOrWhiteSpace(instructor.OfficeAssignment.Location))

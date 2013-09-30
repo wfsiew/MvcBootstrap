@@ -15,6 +15,7 @@ namespace MvcBootstrap.Abstract
         Instructor GetByID(int id);
         void Insert(Instructor instructor, string[] selectedCourses);
         void Delete(int id);
+        void Delete(List<int> ids);
         void Update(Instructor instructor, string[] selectedCourses);
         void Save();
     }
