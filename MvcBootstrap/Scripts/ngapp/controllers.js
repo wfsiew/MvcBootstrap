@@ -282,7 +282,7 @@ function StudentDetailsCtrl($scope, $http, $routeParams, Page, Menu) {
 }
 // endregion students
 
-//region courses
+// region courses
 function CourseCtrl($scope, $http, Page, Menu) {
     Page.setTitle('Courses');
     Menu.setMenu('courses');
@@ -542,7 +542,184 @@ function CourseDetailsCtrl($scope, $http, $routeParams, Page, Menu) {
         $scope.model = data.model;
     });
 }
-//endregion courses
+// endregion courses
+
+// region instructors
+function InstructorCtrl($scope, $http, $timeout, Page, Menu) {
+    Page.setTitle('Instructors');
+    Menu.setMenu('instructors');
+
+    $scope.selected = {
+        all: false,
+        count: 0,
+        message: function () {
+            return this.count + " item" + (this.count > 1 ? 's' : '') + " selected";
+        },
+        reset: function () {
+            this.all = false;
+            this.count = 0;
+        }
+    };
+
+    if (Page.message().show) {
+        $scope.message = _.clone(Page.message());
+        Page.resetMessage();
+    }
+
+    $scope.find = function () {
+        $scope.gotoPage(1);
+    }
+
+    $scope.gotoPage = function (page) {
+        var params = {
+            SearchString: $scope.SearchString,
+            sortOrder: $scope.currentSort,
+            page: page
+        };
+        $http.get('/Ng/Instructor/Index', { params: params }).success(function (data) {
+            $scope.pager = data.pager;
+            $scope.model = data.model;
+        });
+    }
+
+    $scope.sort = function (a) {
+        if (a == 'Name') {
+            if ($scope.currentSort == null || $scope.currentSort == '')
+                $scope.currentSort = 'Name_desc';
+
+            else
+                $scope.currentSort = '';
+        }
+
+        else if (a == 'FirstName') {
+            if ($scope.currentSort == 'FirstName')
+                $scope.currentSort = 'FirstName_desc';
+
+            else
+                $scope.currentSort = 'FirstName';
+        }
+
+        else if (a == 'Date') {
+            if ($scope.currentSort == 'Date')
+                $scope.currentSort = 'Date_desc';
+
+            else
+                $scope.currentSort = 'Date';
+        }
+
+        else if (a == 'Loc') {
+            if ($scope.currentSort == 'Loc')
+                $scope.currentSort = 'Loc_desc';
+
+            else
+                $scope.currentSort = 'Loc';
+        }
+
+        $scope.gotoPage($scope.pager.PageNum);
+    }
+
+    $scope.getSortCss = function (a) {
+        var up = 'icon-chevron-up icon-white';
+        var down = 'icon-chevron-down icon-white';
+
+        if (($scope.currentSort == null || $scope.currentSort == '') && a == 'Name')
+            return up;
+
+        if ($scope.currentSort.indexOf(a) == 0) {
+            if ($scope.currentSort.indexOf('desc') > 0)
+                return down;
+
+            else
+                return up;
+        }
+
+        return null;
+    }
+
+    $scope.selectRow = function ($event, o) {
+        $event.stopPropagation();
+
+        if (o.selected)
+            ++$scope.selected.count;
+
+        else
+            --$scope.selected.count;
+    }
+
+    $scope.selectAll = function ($event) {
+        $event.stopPropagation();
+
+        var list = null;
+        var n = 0;
+
+        if ($scope.model != null)
+            list = $scope.model;
+
+        if (list != null)
+            n = list.length;
+
+        for (var i = 0; i < n; i++) {
+            var o = list[i];
+            o.selected = $scope.selected.all;
+        }
+
+        if ($scope.selected.all)
+            $scope.selected.count = n;
+
+        else
+            $scope.selected.count = 0;
+    }
+
+    $scope.removeItems = function () {
+        if ($scope.selected.count < 1)
+            return;
+
+        var list = $scope.model;
+        var lx = _.where(list, { selected: true });
+        var ids = _.map(lx, function (o) {
+            return o.PersonID;
+        });
+        $http.post('/Ng/Instructor/Delete', { departments: departments }).success(function (data) {
+            if (data.success == 1) {
+                Page.setMessage(data.message);
+                $scope.message = _.clone(Page.message());
+                Page.resetMessage();
+                $scope.selected.reset();
+                $scope.gotoPage($scope.pager.PageNum);
+            }
+
+            else if (data.error == 1) {
+                $scope.error = true;
+                $scope.errorText = data.message;
+            }
+        });
+    }
+
+    $scope.removeItem = function (o) {
+        var departments = [{ DepartmentID: o.DepartmentID, RowVersion: o.RowVersion }];
+        $http.post('/Ng/Instructor/Delete', { ids: ids }).success(function (data) {
+            if (data.success == 1) {
+                Page.setMessage(data.message);
+                $scope.message = _.clone(Page.message());
+                Page.resetMessage();
+                $scope.selected.reset();
+                $scope.gotoPage($scope.pager.PageNum);
+            }
+
+            else if (data.error == 1) {
+                $scope.error = true;
+                $scope.errorText = data.message;
+            }
+        });
+    }
+
+    $scope.dismissAlert = function () {
+        $scope.error = false;
+    }
+
+    $scope.gotoPage(1);
+}
+// endregion instructors
 
 // region departments
 function DepartmentCtrl($scope, $http, Page, Menu) {

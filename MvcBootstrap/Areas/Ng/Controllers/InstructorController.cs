@@ -92,9 +92,23 @@ namespace MvcBootstrap.Areas.Ng.Controllers
             int pageSize = Constants.PAGE_SIZE;
             int pageNumber = (page ?? 1);
 
-            viewModel.Instructors = instructors.ToPagedList(pageNumber, pageSize);
+            var l = instructors.ToPagedList(pageNumber, pageSize);
+            var lx = l.Select(x => new
+            {
+                LastName = x.LastName,
+                FirstMidName = x.FirstMidName,
+                HireDate = x.HireDate,
+                OfficeAssignment = new { Location = x.OfficeAssignment == null ? null : x.OfficeAssignment.Location },
+                Courses = x.Courses == null ? null : x.Courses.Select(c => new { CourseID = c.CourseID, Title = c.Title })
+            });
+            Pager pager = new Pager(l.TotalItemCount, l.PageNumber, l.PageSize);
+            Dictionary<string, object> res = new Dictionary<string, object>
+            {
+                { "pager", pager },
+                { "model", lx }
+            };
 
-            return View(viewModel);
+            return Json(res, JsonRequestBehavior.AllowGet);
         }
 
         protected override void Dispose(bool disposing)
