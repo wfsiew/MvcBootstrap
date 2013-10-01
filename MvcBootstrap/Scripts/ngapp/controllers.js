@@ -679,7 +679,7 @@ function InstructorCtrl($scope, $http, $timeout, Page, Menu) {
         var ids = _.map(lx, function (o) {
             return o.PersonID;
         });
-        $http.post('/Ng/Instructor/Delete', { departments: departments }).success(function (data) {
+        $http.post('/Ng/Instructor/Delete', { ids: ids }).success(function (data) {
             if (data.success == 1) {
                 Page.setMessage(data.message);
                 $scope.message = _.clone(Page.message());
@@ -696,7 +696,7 @@ function InstructorCtrl($scope, $http, $timeout, Page, Menu) {
     }
 
     $scope.removeItem = function (o) {
-        var departments = [{ DepartmentID: o.DepartmentID, RowVersion: o.RowVersion }];
+        var ids = [o.PersonID];
         $http.post('/Ng/Instructor/Delete', { ids: ids }).success(function (data) {
             if (data.success == 1) {
                 Page.setMessage(data.message);
@@ -710,6 +710,19 @@ function InstructorCtrl($scope, $http, $timeout, Page, Menu) {
                 $scope.error = true;
                 $scope.errorText = data.message;
             }
+        });
+    }
+
+    $scope.selectInstructor = function (o) {
+        $http.get('/Ng/Instructor/Courses', { params: { id: o.PersonID } }).success(function (data) {
+            $scope.courses = data;
+            $scope.enrollments = null;
+        });
+    }
+
+    $scope.selectCourse = function (x) {
+        $http.get('/Ng/Instructor/Enrollments', { params: { id: x.PersonID, courseID: x.CourseID } }).success(function(data) {
+            $scope.enrollments = data;
         });
     }
 

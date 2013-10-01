@@ -23,7 +23,7 @@ namespace MvcBootstrap.Areas.Ng.Controllers
             this.repository = repository;
         }
 
-        public ActionResult Index(string sortOrder, string searchString, int? page, int? id, int? courseID)
+        public ActionResult Index(string sortOrder, string searchString, int? page, int? courseID)
         {
             string keyword = string.IsNullOrEmpty(searchString) ? null : searchString.ToUpper();
 
@@ -40,12 +40,6 @@ namespace MvcBootstrap.Areas.Ng.Controllers
             {
                 instructors = instructors.Where(x => x.LastName.ToUpper().Contains(keyword) ||
                     x.FirstMidName.ToUpper().Contains(keyword));
-            }
-
-            if (id != null)
-            {
-                ViewBag.PersonID = id.Value;
-                viewModel.Courses = instructors.Where(i => i.PersonID == id.Value).Single().Courses;
             }
 
             if (courseID != null)
@@ -95,6 +89,7 @@ namespace MvcBootstrap.Areas.Ng.Controllers
             var l = instructors.ToPagedList(pageNumber, pageSize);
             var lx = l.Select(x => new
             {
+                PersonID = x.PersonID,
                 LastName = x.LastName,
                 FirstMidName = x.FirstMidName,
                 HireDate = x.HireDate,
@@ -109,6 +104,47 @@ namespace MvcBootstrap.Areas.Ng.Controllers
             };
 
             return Json(res, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Courses(int? id)
+        {
+            if (id != null)
+            {
+                var courses = repository.GetInstructors()
+                    .Include(i => i.Courses.Select(x => x.Department))
+                    .Where(i => i.PersonID == id.Value).Single().Courses;
+                var lx = courses.Select(x => new
+                {
+                    PersonID = id,
+                    CourseID = x.CourseID,
+                    Title = x.Title,
+                    Department = new { Name = x.Department == null ? null : x.Department.Name }
+                });
+
+                return Json(lx, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(new List<Course>(), JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Enrollments(int? id, int? courseID)
+        {
+            if (id != null && courseID != null)
+            {
+                var enrollments = repository.GetInstructors()
+                    .Include(i => i.Courses.Select(x => x.Department))
+                    .Where(i => i.PersonID == id.Value).Single().Courses
+                    .Where(i => i.CourseID == courseID).Single().Enrollments;
+                var lx = enrollments.Select(x => new
+                {
+                    Student = new { FullName = x.Student == null ? null : x.Student.FullName },
+                    Grade = x.Grade == null ? Enrollment.NO_GRADE : Enum.GetName(typeof(Grade), x.Grade)
+                });
+
+                return Json(lx, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(new List<Enrollment>(), JsonRequestBehavior.AllowGet);
         }
 
         protected override void Dispose(bool disposing)

@@ -58,8 +58,9 @@
                 <input type="checkbox" ng-model="o.selected" ng-click="selectRow($event, o)" />
             </td>
             <td>{{o.LastName}}</td>
-            <td class="menuitem">
+            <td class="menuitem1">
                 <div ng-show="o.mouseover == true">
+                    <a href ng-click="selectInstructor(o)" tooltip="Select" tooltip-trigger="mouseenter" tooltip-placement="bottom"><i class="icon-th icon-white"></i></a>
                     <a href="#/instructors/edit/{{o.PersonID}}" tooltip="Edit" tooltip-trigger="mouseenter" tooltip-placement="bottom"><i class="icon-pencil icon-white"></i></a>
                     <a href="#/instructors/details/{{o.PersonID}}" tooltip="Details" tooltip-trigger="mouseenter" tooltip-placement="bottom"><i class="icon-list-alt icon-white"></i></a>
                     <a href ng-click="removeItem(o)" tooltip="Delete" tooltip-trigger="mouseenter" tooltip-placement="bottom"><i class="icon-trash icon-white"></i></a>
@@ -70,7 +71,7 @@
             <td>{{o.OfficeAssignment.Location}}</td>
             <td>
                 <div ng-repeat="x in o.Courses">
-                    {{x.CourseID}} {{x.Title}}<br />
+                    {{x.CourseID}} {{x.Title}}
                 </div>
             </td>
         </tr>
@@ -93,3 +94,47 @@
     max-size="10" 
     on-select-page="gotoPage(page)">
 </pagination>
+
+<div ng-show="courses != null">
+    <h3>Courses Taught by Selected Instructor</h3>
+    <table class="table table-striped table-hover table-condensed" style="width: 40%">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th></th>
+                <th>Title</th>
+                <th>Department</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="x in courses" ng-mouseover="x.mouseover = true" ng-mouseleave="x.mouseover = false">
+                <td>{{x.CourseID}}</td>
+                <td class="menuitem">
+                    <div ng-show="x.mouseover == true">
+                        <a href ng-click="selectCourse(x)" tooltip="Select" tooltip-trigger="mouseenter" tooltip-placement="bottom"><i class="icon-th icon-white"></i></a>
+                    </div>
+                </td>
+                <td>{{x.Title}}</td>
+                <td>{{x.Department.Name}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div ng-show="enrollments != null">
+    <h3>Students Enrolled in Selected Course</h3>
+    <table class="table table-striped table-hover table-condensed" style="width: 30%">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Grade</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="x in enrollments">
+                <td>{{x.Student.FullName}}</td>
+                <td>{{x.Grade}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
