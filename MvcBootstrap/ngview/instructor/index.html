@@ -53,7 +53,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="o in model" ng-mouseover="o.mouseover = true" ng-mouseleave="o.mouseover = false">
+        <tr ng-repeat="o in model" ng-mouseover="o.mouseover = true" ng-mouseleave="o.mouseover = false" ng-class="{success: o.select}">
             <td>
                 <input type="checkbox" ng-model="o.selected" ng-click="selectRow($event, o)" />
             </td>
@@ -107,7 +107,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="x in courses" ng-mouseover="x.mouseover = true" ng-mouseleave="x.mouseover = false">
+            <tr ng-repeat="x in courses" ng-mouseover="x.mouseover = true" ng-mouseleave="x.mouseover = false" ng-class="{success: x.select}">
                 <td>{{x.CourseID}}</td>
                 <td class="menuitem">
                     <div ng-show="x.mouseover == true">

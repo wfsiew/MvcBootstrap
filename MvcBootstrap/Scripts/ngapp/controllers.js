@@ -561,6 +561,9 @@ function InstructorCtrl($scope, $http, $timeout, Page, Menu) {
         }
     };
 
+    $scope.instructor = null;
+    $scope.course = null;
+
     if (Page.message().show) {
         $scope.message = _.clone(Page.message());
         Page.resetMessage();
@@ -715,13 +718,23 @@ function InstructorCtrl($scope, $http, $timeout, Page, Menu) {
 
     $scope.selectInstructor = function (o) {
         $http.get('/Ng/Instructor/Courses', { params: { id: o.PersonID } }).success(function (data) {
-            $scope.courses = data;
             $scope.enrollments = null;
+            if ($scope.instructor != null)
+                $scope.instructor.select = false;
+
+            o.select = true;
+            $scope.instructor = o;
+            $scope.courses = data;
         });
     }
 
     $scope.selectCourse = function (x) {
         $http.get('/Ng/Instructor/Enrollments', { params: { id: x.PersonID, courseID: x.CourseID } }).success(function(data) {
+            if ($scope.course != null)
+                $scope.course.select = false;
+
+            x.select = true;
+            $scope.course = x;
             $scope.enrollments = data;
         });
     }
