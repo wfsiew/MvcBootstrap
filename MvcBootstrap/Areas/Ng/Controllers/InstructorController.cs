@@ -23,7 +23,7 @@ namespace MvcBootstrap.Areas.Ng.Controllers
             this.repository = repository;
         }
 
-        public ActionResult Index(string sortOrder, string searchString, int? page, int? courseID)
+        public ActionResult Index(string sortOrder, string searchString, int? page)
         {
             string keyword = string.IsNullOrEmpty(searchString) ? null : searchString.ToUpper();
 
@@ -40,12 +40,6 @@ namespace MvcBootstrap.Areas.Ng.Controllers
             {
                 instructors = instructors.Where(x => x.LastName.ToUpper().Contains(keyword) ||
                     x.FirstMidName.ToUpper().Contains(keyword));
-            }
-
-            if (courseID != null)
-            {
-                ViewBag.CourseID = courseID.Value;
-                viewModel.Enrollments = viewModel.Courses.Where(x => x.CourseID == courseID).Single().Enrollments;
             }
 
             switch (sortOrder)
@@ -124,7 +118,7 @@ namespace MvcBootstrap.Areas.Ng.Controllers
                 return Json(lx, JsonRequestBehavior.AllowGet);
             }
 
-            return Json(new List<Course>(), JsonRequestBehavior.AllowGet);
+            return Json(new List<byte>(), JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Enrollments(int? id, int? courseID)
@@ -144,7 +138,7 @@ namespace MvcBootstrap.Areas.Ng.Controllers
                 return Json(lx, JsonRequestBehavior.AllowGet);
             }
 
-            return Json(new List<Enrollment>(), JsonRequestBehavior.AllowGet);
+            return Json(new List<byte>(), JsonRequestBehavior.AllowGet);
         }
 
         protected override void Dispose(bool disposing)

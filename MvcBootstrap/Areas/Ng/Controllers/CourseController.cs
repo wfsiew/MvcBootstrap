@@ -210,18 +210,18 @@ namespace MvcBootstrap.Areas.Ng.Controllers
             return Json(o, JsonRequestBehavior.AllowGet);
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            repository.Dispose();
+            base.Dispose(disposing);
+        }
+
         private object GetDepartments()
         {
             IOrderedQueryable<Department> departmentsQuery = repository.Context.Departments.OrderBy(x => x.Name);
             List<Department> l = departmentsQuery.ToList();
             var o = l.Select(x => new { DepartmentID = x.DepartmentID, Name = x.Name });
             return o;
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            repository.Dispose();
-            base.Dispose(disposing);
         }
     }
 }
