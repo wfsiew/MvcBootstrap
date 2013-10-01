@@ -299,6 +299,7 @@
     <Content Include="ngview\department\index.html" />
     <Content Include="ngview\home\about.html" />
     <Content Include="ngview\home\index.html" />
+    <Content Include="ngview\instructor\details.html" />
     <Content Include="ngview\instructor\form.html" />
     <Content Include="ngview\instructor\index.html" />
     <Content Include="ngview\shared\alert.html" />

@@ -135,7 +135,6 @@ namespace MvcBootstrap.Controllers
         public ActionResult Create()
         {
             ViewBag.menu = MENU;
-            PopulateInstructorsDropDownList();
             PopulateAssignedCourseData();
             return View();
         }
@@ -159,7 +158,6 @@ namespace MvcBootstrap.Controllers
                 return RedirectToAction("Index");
             }
 
-            PopulateInstructorsDropDownList(instructor.PersonID);
             PopulateAssignedCourseData();
             return View(instructor);
         }
@@ -216,6 +214,7 @@ namespace MvcBootstrap.Controllers
                 }
             }
 
+            PopulateInstructorsDropDownList(instructorToUpdate.PersonID);
             PopulateAssignedCourseData(instructorToUpdate);
             return View(instructorToUpdate);
         }
@@ -257,7 +256,7 @@ namespace MvcBootstrap.Controllers
 
         private void PopulateInstructorsDropDownList(object selectedInstructor = null)
         {
-            ViewBag.PersonID = new SelectList(repository.Context.OfficeAssignments, "PersonID", "Location", selectedInstructor);
+            ViewBag.PersonID_ = new SelectList(repository.Context.OfficeAssignments, "PersonID", "Location", selectedInstructor);
         }
 
         private void PopulateAssignedCourseData(Instructor instructor = null)

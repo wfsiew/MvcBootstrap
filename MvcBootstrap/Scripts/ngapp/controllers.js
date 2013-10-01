@@ -745,6 +745,41 @@ function InstructorCtrl($scope, $http, $timeout, Page, Menu) {
 
     $scope.gotoPage(1);
 }
+
+function InstructorCreateCtrl($scope, $http, Page, Menu) {
+    Page.setTitle('Create');
+    Menu.setMenu('instructors');
+
+    $scope.title = 'Create';
+    $scope.action = 'Create';
+
+    $scope.save = function () {
+
+    }
+
+    $scope.open = function () {
+        $timeout(function () {
+            $scope.opened = true;
+        });
+    }
+
+    $scope.dismissAlert = function () {
+        $scope.error = false;
+    }
+
+    $http.get('/Ng/Instructor/AllCourses').success(function (data) {
+        $scope.Courses = data;
+    });
+}
+
+function InstructorDetailsCtrl($scope, $http, $routeParams, Page, Menu) {
+    Page.setTitle('Details');
+    Menu.setMenu('instructors');
+
+    $http.get('/Ng/Instructor/Details/' + $routeParams.id).success(function (data) {
+        $scope.model = data.model;
+    });
+}
 // endregion instructors
 
 // region departments

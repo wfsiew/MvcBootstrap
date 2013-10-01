@@ -141,23 +141,69 @@ namespace MvcBootstrap.Areas.Ng.Controllers
             return Json(new List<byte>(), JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult Details(int id = 0)
+        {
+            Instructor instructor = repository.GetByID(id);
+            var model = new
+            {
+                FirstMidName = instructor.FirstMidName,
+                FullName = instructor.FullName,
+                HireDate = instructor.HireDate,
+                LastName = instructor.LastName,
+                OfficeAssignment = new { Location = instructor.OfficeAssignment == null ? null : instructor.OfficeAssignment.Location },
+                PersonID = instructor.PersonID
+            };
+
+            Dictionary<string, object> res = new Dictionary<string, object>
+            {
+                { "model", model }
+            };
+
+            return Json(res, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Create(Instructor instructor, string[] selectedCourses)
+        {
+            Dictionary<string, object> res = new Dictionary<string, object>();
+
+            res["success"] = 1;
+            res["message"] = string.Format("{0} has been saved", instructor.FullName);
+
+            return Json(res, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult AllCourses()
+        {
+            List<AssignedCourseData> o = GetCourses();
+            return Json(o, JsonRequestBehavior.AllowGet);
+        }
+
         protected override void Dispose(bool disposing)
         {
             repository.Dispose();
             base.Dispose(disposing);
         }
 
-        public JsonResult Instructors()
+        private List<AssignedCourseData> GetCourses(Instructor instructor = null)
         {
-            object o = GetInstructors();
-            return Json(o, JsonRequestBehavior.AllowGet);
-        }
+            DbSet<Course> allCourses = repository.Context.Courses;
+            HashSet<int> instructorCourses = null;
 
-        private object GetInstructors()
-        {
-            List<OfficeAssignment> l = repository.Context.OfficeAssignments.ToList();
-            var o = l.Select(x => new { PersonID = x.PersonID, Location = x.Location });
-            return o;
+            if (instructor != null)
+                instructorCourses = new HashSet<int>(instructor.Courses.Select(c => c.CourseID));
+
+            List<AssignedCourseData> viewModel = new List<AssignedCourseData>();
+            foreach (Course course in allCourses)
+            {
+                viewModel.Add(new AssignedCourseData
+                {
+                    CourseID = course.CourseID,
+                    Title = course.Title,
+                    Assigned = instructor == null ? false : instructorCourses.Contains(course.CourseID)
+                });
+            }
+
+            return viewModel;
         }
     }
 }

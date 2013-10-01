@@ -1,0 +1,49 @@
+﻿<h2>Details</h2>
+
+<div class="well">
+    <form class="form-horizontal" role="form">
+        <fieldset>
+            <legend>Instructor</legend>
+
+            <div class="control-group">
+                <label class="control-label">Last Name</label>
+                <div class="controls">
+                    {{model.LastName}}
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">First Name</label>
+                <div class="controls">
+                    {{model.FirstMidName}}
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Hire Date</label>
+                <div class="controls">
+                    {{model.HireDate | datefilter | date:'dd/MM/yyyy'}}
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Full Name</label>
+                <div class="controls">
+                    {{model.FullName}}
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Office Location</label>
+                <div class="controls">
+                    {{model.OfficeAssignment.Location}}
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+<div class="navbar">
+    <div class="navbar-inner">
+        <ul class="nav">
+            <li><a href="#/instructors/edit/{{model.PersonID}}"><i class="icon-pencil icon-white"></i> Edit</a></li>
+            <li><a href="#/instructors"><i class="icon-arrow-left icon-white"></i> Back to List</a></li>
+        </ul>
+    </div>
+</div>

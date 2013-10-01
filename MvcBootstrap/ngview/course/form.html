@@ -14,7 +14,7 @@
                         x-webkit-speech="x-webkit-speech"
                         ng-model="model.CourseID"
                         required
-                        ng-pattern=/^[0-9]$/>
+                        ng-pattern=/^\d+$/>
                     <span class="label label-important" ng-show="form.CourseID.$error.required">The Number field is required.</span>
                     <span class="label label-important" ng-show="form.CourseID.$error.pattern">The field Number must be a number.</span>
                 </div>
@@ -37,7 +37,7 @@
                         x-webkit-speech="x-webkit-speech"
                         ng-model="model.Credits"
                         required
-                        ng-pattern=/^[0-9]$/
+                        ng-pattern=/^\d+$/
                         min="0"
                         max="5">
                     <span class="label label-important" ng-show="form.Credits.$error.required">The Credits field is required.</span>

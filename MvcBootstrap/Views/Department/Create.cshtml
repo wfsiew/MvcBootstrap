@@ -41,7 +41,7 @@
         <div class="control-group">
             @Html.LabelFor(model => model.PersonID, HtmlHelpers.LabelAttributes())
             <div class="controls">
-                @Html.DropDownList("PersonID", ViewBag.PersonID_ as SelectList, String.Empty, new { @class = "input-xxlarge" })
+                @Html.DropDownList("PersonID", ViewBag.PersonID_ as SelectList, String.Empty)
                 @Html.ValidationMessageFor(model => model.PersonID,  "", new { @class = "label label-important" })
             </div>
         </div>

@@ -25,7 +25,7 @@
                         x-webkit-speech="x-webkit-speech"
                         ng-model="model.Budget"
                         required
-                        ng-pattern=/^[0-9]$/>
+                        ng-pattern=/^\d+$/>
                     <span class="label label-important" ng-show="form.Budget.$error.required">The Budget field is required.</span>
                     <span class="label label-important" ng-show="form.Budget.$error.pattern">The field Budget must be a number.</span>
                 </div>

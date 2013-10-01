@@ -19,7 +19,6 @@ namespace MvcBootstrap.Helpers
         {
             return new Dictionary<string, object>
             {
-                { "class", "input-xxlarge" },
                 { "placeholder", placeholder },
                 { "x-webkit-speech", "x-webkit-speech" }
             };

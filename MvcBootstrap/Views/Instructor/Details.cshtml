@@ -37,6 +37,12 @@
                     @Html.DisplayFor(model => model.FullName)
                 </div>
             </div>
+            <div class="control-group">
+                @Html.LabelFor(model => model.OfficeAssignment.Location, HtmlHelpers.LabelAttributes())
+                <div class="controls">
+                    @Html.DisplayFor(model => model.OfficeAssignment.Location)
+                </div>
+            </div>
         </fieldset>
     </form>
 </div>
