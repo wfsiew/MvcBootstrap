@@ -162,12 +162,102 @@ namespace MvcBootstrap.Areas.Ng.Controllers
             return Json(res, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
         public ActionResult Create(Instructor instructor, string[] selectedCourses)
         {
             Dictionary<string, object> res = new Dictionary<string, object>();
 
-            res["success"] = 1;
-            res["message"] = string.Format("{0} has been saved", instructor.FullName);
+            try
+            {
+                if (TryUpdateModel(instructor, "",
+                    new string[] { "LastName", "FirstMidName", "HireDate", "OfficeAssignment" }))
+                {
+                    repository.Insert(instructor, selectedCourses);
+                    repository.Save();
+                    res["success"] = 1;
+                    res["message"] = string.Format("{0} has been saved", instructor.FullName);
+                }
+            }
+
+            catch (Exception ex)
+            {
+                res["error"] = 1;
+                res["message"] = ex.ToString();
+            }
+
+            return Json(res, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Edit(int id = 0)
+        {
+            Instructor instructor = repository.GetInstructors()
+                .Include(i => i.OfficeAssignment)
+                .Include(i => i.Courses)
+                .Where(i => i.PersonID == id)
+                .Single();
+
+            var o = new
+            {
+                Courses = GetCourses(instructor),
+                FirstMidName = instructor.FirstMidName,
+                HireDate = instructor.HireDate,
+                LastName = instructor.LastName,
+                OfficeAssignment = new { Location = instructor.OfficeAssignment == null ? null : instructor.OfficeAssignment.Location },
+                PersonID = instructor.PersonID
+            };
+            return Json(o, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(int id, string[] selectedCourses)
+        {
+            Dictionary<string, object> res = new Dictionary<string, object>();
+
+            try
+            {
+                Instructor instructorToUpdate = repository.GetInstructors()
+                .Include(i => i.OfficeAssignment)
+                .Include(i => i.Courses)
+                .Where(i => i.PersonID == id)
+                .Single();
+
+                if (TryUpdateModel(instructorToUpdate, "",
+                    new string[] { "LastName", "FirstMidName", "HireDate", "OfficeAssignment" }))
+                {
+                    repository.Update(instructorToUpdate, selectedCourses);
+                    repository.Save();
+                    res["success"] = 1;
+                    res["message"] = string.Format("{0} has been saved", instructorToUpdate.FullName);
+                }
+            }
+
+            catch (Exception ex)
+            {
+                res["error"] = 1;
+                res["message"] = ex.ToString();
+            }
+
+            return Json(res, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult Delete(List<int> ids)
+        {
+            Dictionary<string, object> res = new Dictionary<string, object>();
+
+            try
+            {
+                repository.Delete(ids);
+                repository.Save();
+                res["success"] = 1;
+                res["message"] = string.Format("{0} instructor(s) has been successfully deleted", ids.Count);
+            }
+
+            catch (Exception ex)
+            {
+                res["error"] = 1;
+                res["message"] = ex.ToString();
+            }
 
             return Json(res, JsonRequestBehavior.AllowGet);
         }

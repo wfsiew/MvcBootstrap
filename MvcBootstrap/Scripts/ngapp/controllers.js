@@ -754,7 +754,30 @@ function InstructorCreateCtrl($scope, $http, Page, Menu) {
     $scope.action = 'Create';
 
     $scope.save = function () {
+        var _selectedCourses = _.where($scope.Courses, { Assigned: true });
+        var selectedCourses = _.map(_selectedCourses, function (o) {
+            return o.CourseID;
+        });
+        var o = {
+            LastName: $scope.model.LastName,
+            FirstMidName: $scope.model.FirstMidName,
+            HireDate: utils.getDateStr($scope.model.HireDate),
+            'OfficeAssignment.Location': $scope.model.OfficeAssignment.Location,
+            selectedCourses: selectedCourses,
+            PersonID: $scope.model.PersonID
+        };
 
+        $http.post('/Ng/Instructor/Create', o).success(function (data) {
+            if (data.success == 1) {
+                Page.setMessage(data.message);
+                window.location.href = '#/instructors';
+            }
+
+            else if (data.error == 1) {
+                $scope.error = true;
+                $scope.errorText = data.message;
+            }
+        });
     }
 
     $scope.open = function () {
@@ -770,6 +793,57 @@ function InstructorCreateCtrl($scope, $http, Page, Menu) {
     $http.get('/Ng/Instructor/AllCourses').success(function (data) {
         $scope.Courses = data;
     });
+}
+
+function InstructorEditCtrl($scope, $http, $routeParams, $timeout, Page, Menu) {
+    Page.setTitle('Edit');
+    Menu.setMenu('instructors');
+
+    $scope.title = 'Edit';
+    $scope.action = 'Save';
+
+    $http.get('/Ng/Instructor/Edit/' + $routeParams.id).success(function (data) {
+        $scope.model = data;
+        $scope.model.HireDate = utils.getDate(data.HireDate);
+        $scope.Courses = data.Courses;
+    });
+
+    $scope.save = function () {
+        var _selectedCourses = _.where($scope.Courses, { Assigned: true });
+        var selectedCourses = _.map(_selectedCourses, function (o) {
+            return o.CourseID;
+        });
+        var o = {
+            LastName: $scope.model.LastName,
+            FirstMidName: $scope.model.FirstMidName,
+            HireDate: utils.getDateStr($scope.model.HireDate),
+            'OfficeAssignment.Location': $scope.model.OfficeAssignment.Location,
+            selectedCourses: selectedCourses,
+            PersonID: $scope.model.PersonID
+        };
+
+        $http.post('/Ng/Instructor/Edit/' + $routeParams.id, o).success(function (data) {
+            if (data.success == 1) {
+                Page.setMessage(data.message);
+                window.location.href = '#/instructors';
+            }
+
+            else if (data.error == 1) {
+                $scope.error = true;
+                $scope.errorText = data.message;
+            }
+        });
+    }
+
+    $scope.open = function () {
+        $timeout(function () {
+            $scope.opened = true;
+        });
+    }
+
+    $scope.dismissAlert = function () {
+        $scope.error = false;
+    }
 }
 
 function InstructorDetailsCtrl($scope, $http, $routeParams, Page, Menu) {
