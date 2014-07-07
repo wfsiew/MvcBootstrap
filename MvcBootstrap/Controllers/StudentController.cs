@@ -34,13 +34,13 @@ namespace MvcBootstrap.Controllers
             ViewBag.FirstNameSortParm = sortOrder == "FirstName" ? "FirstName_desc" : "FirstName";
             ViewBag.DateSortParm = sortOrder == "Date" ? "Date_desc" : "Date";
 
-            string keyword = string.IsNullOrEmpty(searchString) ? null : searchString.ToUpper();
-
             if (searchString != null)
                 page = 1;
 
             else
                 searchString = currentFilter;
+
+            string keyword = string.IsNullOrEmpty(searchString) ? null : searchString.ToUpper();
 
             ViewBag.CurrentFilter = searchString;
 

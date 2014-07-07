@@ -37,8 +37,6 @@ namespace MvcBootstrap.Controllers
             ViewBag.DateSortParm = sortOrder == "Date" ? "Date_desc" : "Date";
             ViewBag.LocationSortParm = sortOrder == "Loc" ? "Loc_desc" : "Loc";
 
-            string keyword = string.IsNullOrEmpty(searchString) ? null : searchString.ToUpper();
-
             InstructorIndexData viewModel = new InstructorIndexData();
 
             if (searchString != null)
@@ -46,6 +44,8 @@ namespace MvcBootstrap.Controllers
 
             else
                 searchString = currentFilter;
+
+            string keyword = string.IsNullOrEmpty(searchString) ? null : searchString.ToUpper();
 
             ViewBag.CurrentFilter = searchString;
 
