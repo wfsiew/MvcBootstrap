@@ -167,12 +167,12 @@ namespace MvcBootstrap.Migrations
                     Grade = Grade.B
                  },
                  new Enrollment { 
-                     PersonID = students.Single(s => s.LastName == "Alonso").PersonID,
+                    PersonID = students.Single(s => s.LastName == "Alonso").PersonID,
                     CourseID = courses.Single(c => c.Title == "Calculus" ).CourseID, 
                     Grade = Grade.B 
                  },
                  new Enrollment { 
-                     PersonID = students.Single(s => s.LastName == "Alonso").PersonID,
+                    PersonID = students.Single(s => s.LastName == "Alonso").PersonID,
                     CourseID = courses.Single(c => c.Title == "Trigonometry" ).CourseID, 
                     Grade = Grade.B 
                  },
