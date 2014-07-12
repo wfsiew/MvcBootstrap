@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web;
 using System.Text;
+using System.Web;
 
 namespace MvcBootstrap.Models
 {
@@ -19,10 +19,8 @@ namespace MvcBootstrap.Models
 
         public string GetCourses(bool ishtml)
         {
-            IEnumerable<Course> l = Courses;
+            IEnumerable<Course> l = Courses ?? new List<Course>();
             StringBuilder sb = new StringBuilder();
-            if (l == null)
-                return null;
 
             for (int i = 0; i < l.Count(); i++)
             {

@@ -401,7 +401,7 @@ namespace MvcBootstrap.Controllers
                     break;
             }
 
-            var lr = instructors.Select(x => new
+            var lr = instructors.ToList().Select(x => new
             {
                 LastName = x.LastName,
                 FirstName = x.FirstMidName,
