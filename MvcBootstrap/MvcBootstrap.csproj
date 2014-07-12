@@ -39,8 +39,30 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ClosedXML">
+      <HintPath>..\packages\DoddleReport.OpenXml.1.4\lib\net40\ClosedXML.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.0.5022.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\DoddleReport.OpenXml.1.4\lib\net40\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="DoddleReport">
+      <HintPath>..\packages\DoddleReport.OpenXml.1.4\lib\net40\DoddleReport.dll</HintPath>
+    </Reference>
+    <Reference Include="DoddleReport.iTextSharp">
+      <HintPath>..\packages\DoddleReport.iTextSharp.1.4\lib\net40\DoddleReport.iTextSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="DoddleReport.OpenXml">
+      <HintPath>..\packages\DoddleReport.OpenXml.1.4\lib\net40\DoddleReport.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="DoddleReport.Web">
+      <HintPath>..\packages\DoddleReport.Web.1.4\lib\net40\DoddleReport.Web.dll</HintPath>
+    </Reference>
     <Reference Include="FizzWare.NBuilder">
       <HintPath>..\packages\NBuilder.3.0.1.1\lib\FizzWare.NBuilder.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp">
+      <HintPath>..\packages\DoddleReport.iTextSharp.1.4\lib\net40\itextsharp.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -374,6 +396,7 @@
     <Content Include="Views\Department\Edit.cshtml" />
     <Content Include="Views\Department\Delete.cshtml" />
     <Content Include="Views\Ng\Index.cshtml" />
+    <Content Include="Views\Shared\_ReportLink.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -12,6 +12,8 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using DoddleReport;
+using DoddleReport.Web;
 
 namespace MvcBootstrap.Controllers
 {
@@ -248,6 +250,30 @@ namespace MvcBootstrap.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult HtmlReport(string sortOrder, string currentFilter, string searchString)
+        {
+            Report report = GetReport(sortOrder, currentFilter, searchString, true);
+            return new ReportResult(report);
+        }
+
+        public ActionResult PdfReport(string sortOrder, string currentFilter, string searchString)
+        {
+            Report report = GetReport(sortOrder, currentFilter, searchString);
+            return new ReportResult(report, new DoddleReport.iTextSharp.PdfReportWriter(), "application/pdf");
+        }
+
+        public ActionResult ExcelReport(string sortOrder, string currentFilter, string searchString)
+        {
+            var report = GetReport(sortOrder, currentFilter, searchString);
+            return new ReportResult(report, new DoddleReport.OpenXml.ExcelReportWriter(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        }
+
+        public ActionResult CsvReport(string sortOrder, string currentFilter, string searchString)
+        {
+            var report = GetReport(sortOrder, currentFilter, searchString);
+            return new ReportResult(report, new DoddleReport.Writers.DelimitedTextReportWriter(), "text/plain;charset=UTF-8");
+        }
+
         protected override void Dispose(bool disposing)
         {
             repository.Dispose();
@@ -310,6 +336,88 @@ namespace MvcBootstrap.Controllers
                     }
                 }
             }
+        }
+
+        private Report GetReport(string sortOrder, string currentFilter, string searchString, bool ishtml = false)
+        {
+            ViewBag.menu = MENU;
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NameSortParm = string.IsNullOrEmpty(sortOrder) ? "Name_desc" : "";
+            ViewBag.FirstNameSortParm = sortOrder == "FirstName" ? "FirstName_desc" : "FirstName";
+            ViewBag.DateSortParm = sortOrder == "Date" ? "Date_desc" : "Date";
+            ViewBag.LocationSortParm = sortOrder == "Loc" ? "Loc_desc" : "Loc";
+
+            InstructorIndexData viewModel = new InstructorIndexData();
+
+            if (searchString == null)
+                searchString = currentFilter;
+
+            string keyword = string.IsNullOrEmpty(searchString) ? null : searchString.ToUpper();
+
+            ViewBag.CurrentFilter = searchString;
+
+            var instructors = repository.GetInstructors()
+                .Include(i => i.OfficeAssignment)
+                .Include(i => i.Courses.Select(x => x.Department));
+
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                instructors = instructors.Where(x => x.LastName.ToUpper().Contains(keyword) ||
+                    x.FirstMidName.ToUpper().Contains(keyword));
+            }
+
+            switch (sortOrder)
+            {
+                case "Name_desc":
+                    instructors = instructors.OrderByDescending(x => x.LastName);
+                    break;
+
+                case "FirstName":
+                    instructors = instructors.OrderBy(x => x.FirstMidName);
+                    break;
+
+                case "FirstName_desc":
+                    instructors = instructors.OrderByDescending(x => x.FirstMidName);
+                    break;
+
+                case "Date":
+                    instructors = instructors.OrderBy(x => x.HireDate);
+                    break;
+
+                case "Date_desc":
+                    instructors = instructors.OrderByDescending(x => x.HireDate);
+                    break;
+
+                case "Loc":
+                    instructors = instructors.OrderBy(x => x.OfficeAssignment.Location);
+                    break;
+
+                case "Loc_desc":
+                    instructors = instructors.OrderByDescending(x => x.OfficeAssignment.Location);
+                    break;
+
+                default:
+                    instructors = instructors.OrderBy(x => x.LastName);
+                    break;
+            }
+
+            var lr = instructors.Select(x => new
+            {
+                LastName = x.LastName,
+                FirstName = x.FirstMidName,
+                HireDate = x.HireDate,
+                Office = x.OfficeAssignment,
+                Courses = x.GetCourses(ishtml)
+            });
+            Report report = new Report(lr.ToReportSource());
+            report.TextFields.Title = "Instructors Report";
+            report.TextFields.Header = string.Format(@"Report Generated: {0} Total Instructors: {1}", DateTime.Now, instructors.Count());
+
+            report.DataFields["HireDate"].DataFormatString = "{0:yyyy-MM-dd}";
+
+            report.RenderHints.FreezeRows = 4;
+
+            return report;
         }
     }
 }

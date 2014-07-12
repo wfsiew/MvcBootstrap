@@ -11,6 +11,8 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using DoddleReport;
+using DoddleReport.Web;
 
 namespace MvcBootstrap.Controllers
 {
@@ -213,6 +215,30 @@ namespace MvcBootstrap.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult HtmlReport(string sortOrder, string currentFilter, string searchString)
+        {
+            Report report = GetReport(sortOrder, currentFilter, searchString);
+            return new ReportResult(report);
+        }
+
+        public ActionResult PdfReport(string sortOrder, string currentFilter, string searchString)
+        {
+            Report report = GetReport(sortOrder, currentFilter, searchString);
+            return new ReportResult(report, new DoddleReport.iTextSharp.PdfReportWriter(), "application/pdf");
+        }
+
+        public ActionResult ExcelReport(string sortOrder, string currentFilter, string searchString)
+        {
+            var report = GetReport(sortOrder, currentFilter, searchString);
+            return new ReportResult(report, new DoddleReport.OpenXml.ExcelReportWriter(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        }
+
+        public ActionResult CsvReport(string sortOrder, string currentFilter, string searchString)
+        {
+            var report = GetReport(sortOrder, currentFilter, searchString);
+            return new ReportResult(report, new DoddleReport.Writers.DelimitedTextReportWriter(), "text/plain;charset=UTF-8");
+        }
+
         protected override void Dispose(bool disposing)
         {
             repository.Dispose();
@@ -223,6 +249,81 @@ namespace MvcBootstrap.Controllers
         {
             IOrderedQueryable<Department> departmentsQuery = repository.Context.Departments.OrderBy(x => x.Name);
             ViewBag.DepartmentID_ = new SelectList(departmentsQuery, "DepartmentID", "Name", selectedDepartment);
+        }
+
+        private Report GetReport(string sortOrder, string currentFilter, string searchString)
+        {
+            ViewBag.menu = MENU;
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.TitleSortParm = string.IsNullOrEmpty(sortOrder) ? "Title_desc" : "";
+            ViewBag.DeptSortParm = sortOrder == "Dept" ? "Dept_desc" : "Dept";
+            ViewBag.CourseIDSortParm = sortOrder == "CourseID" ? "CourseID_desc" : "CourseID";
+            ViewBag.CreditsSortParm = sortOrder == "Credits" ? "Credits_desc" : "Credits";
+
+            if (searchString == null)
+                searchString = currentFilter;
+
+            string keyword = string.IsNullOrEmpty(searchString) ? null : searchString.ToUpper();
+
+            ViewBag.CurrentFilter = searchString;
+
+            var courses = repository.GetCourses().Include(c => c.Department);
+
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                courses = courses.Where(x => x.Title.Contains(keyword) ||
+                    x.Department.Name.Contains(keyword));
+            }
+
+            switch (sortOrder)
+            {
+                case "Title_desc":
+                    courses = courses.OrderByDescending(x => x.Title);
+                    break;
+
+                case "Dept":
+                    courses = courses.OrderBy(x => x.Department.Name);
+                    break;
+
+                case "Dept_desc":
+                    courses = courses.OrderByDescending(x => x.Department.Name);
+                    break;
+
+                case "CourseID":
+                    courses = courses.OrderBy(x => x.CourseID);
+                    break;
+
+                case "CourseID_desc":
+                    courses = courses.OrderByDescending(x => x.CourseID);
+                    break;
+
+                case "Credits":
+                    courses = courses.OrderBy(x => x.Credits);
+                    break;
+
+                case "Credits_desc":
+                    courses = courses.OrderByDescending(x => x.Credits);
+                    break;
+
+                default:
+                    courses = courses.OrderBy(x => x.Title);
+                    break;
+            }
+
+            var lr = courses.Select(x => new
+            {
+                Number = x.CourseID,
+                Title = x.Title,
+                Credits = x.Credits,
+                Department = x.Department
+            });
+            Report report = new Report(lr.ToReportSource());
+            report.TextFields.Title = "Courses Report";
+            report.TextFields.Header = string.Format(@"Report Generated: {0} Total Courses: {1}", DateTime.Now, courses.Count());
+
+            report.RenderHints.FreezeRows = 4;
+
+            return report;
         }
     }
 }

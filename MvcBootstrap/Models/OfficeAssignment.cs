@@ -18,5 +18,10 @@ namespace MvcBootstrap.Models
         public string Location { get; set; }
 
         public virtual Instructor Instructor { get; set; }
+
+        public override string ToString()
+        {
+            return Location;
+        }
     }
 }

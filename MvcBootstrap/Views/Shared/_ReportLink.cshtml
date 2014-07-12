@@ -1,0 +1,28 @@
+﻿@Html.ActionLink("HTML report", "HtmlReport", new
+{
+    sortOrder = ViewBag.CurrentSort,
+    currentFilter = ViewBag.CurrentFilter,
+    searchString = ViewBag.CurrentFilter
+},
+    new { target = "_blank" }) |
+@Html.ActionLink("Pdf report", "PdfReport", new
+{
+    sortOrder = ViewBag.CurrentSort,
+    currentFilter = ViewBag.CurrentFilter,
+    searchString = ViewBag.CurrentFilter
+},
+    new { target = "_blank" }) |
+@Html.ActionLink("Excel report", "ExcelReport", new
+{
+    sortOrder = ViewBag.CurrentSort,
+    currentFilter = ViewBag.CurrentFilter,
+    searchString = ViewBag.CurrentFilter
+},
+    new { target = "_blank" }) |
+@Html.ActionLink("Csv report", "CsvReport", new
+{
+    sortOrder = ViewBag.CurrentSort,
+    currentFilter = ViewBag.CurrentFilter,
+    searchString = ViewBag.CurrentFilter
+},
+    new { target = "_blank" })

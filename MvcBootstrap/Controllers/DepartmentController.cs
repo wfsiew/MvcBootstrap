@@ -12,6 +12,8 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using DoddleReport;
+using DoddleReport.Web;
 
 namespace MvcBootstrap.Controllers
 {
@@ -270,6 +272,30 @@ namespace MvcBootstrap.Controllers
             }
         }
 
+        public ActionResult HtmlReport(string sortOrder, string currentFilter, string searchString)
+        {
+            Report report = GetReport(sortOrder, currentFilter, searchString);
+            return new ReportResult(report);
+        }
+
+        public ActionResult PdfReport(string sortOrder, string currentFilter, string searchString)
+        {
+            Report report = GetReport(sortOrder, currentFilter, searchString);
+            return new ReportResult(report, new DoddleReport.iTextSharp.PdfReportWriter(), "application/pdf");
+        }
+
+        public ActionResult ExcelReport(string sortOrder, string currentFilter, string searchString)
+        {
+            var report = GetReport(sortOrder, currentFilter, searchString);
+            return new ReportResult(report, new DoddleReport.OpenXml.ExcelReportWriter(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        }
+
+        public ActionResult CsvReport(string sortOrder, string currentFilter, string searchString)
+        {
+            var report = GetReport(sortOrder, currentFilter, searchString);
+            return new ReportResult(report, new DoddleReport.Writers.DelimitedTextReportWriter(), "text/plain;charset=UTF-8");
+        }
+
         protected override void Dispose(bool disposing)
         {
             repository.Dispose();
@@ -280,6 +306,85 @@ namespace MvcBootstrap.Controllers
         {
             IOrderedQueryable<Instructor> instructorsQuery = repository.Context.Instructors.OrderBy(x => x.LastName);
             ViewBag.PersonID_ = new SelectList(instructorsQuery, "PersonID", "FullName", selectedInstructor);
+        }
+
+        private Report GetReport(string sortOrder, string currentFilter, string searchString)
+        {
+            ViewBag.menu = MENU;
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NameSortParm = string.IsNullOrEmpty(sortOrder) ? "Name_desc" : "";
+            ViewBag.BudgetSortParm = sortOrder == "Budget" ? "Budget_desc" : "Budget";
+            ViewBag.DateSortParm = sortOrder == "Date" ? "Date_desc" : "Date";
+            ViewBag.AdminSortParm = sortOrder == "Admin" ? "Admin_desc" : "Admin";
+
+            if (searchString == null)
+                searchString = currentFilter;
+
+            string keyword = string.IsNullOrEmpty(searchString) ? null : searchString.ToUpper();
+
+            ViewBag.CurrentFilter = searchString;
+
+            var departments = repository.GetDepartments().Include(d => d.Administrator);
+
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                departments = departments.Where(x => x.Name.Contains(keyword) ||
+                    x.Administrator.FirstMidName.Contains(keyword) ||
+                    x.Administrator.LastName.Contains(keyword));
+            }
+
+            switch (sortOrder)
+            {
+                case "Name_desc":
+                    departments = departments.OrderByDescending(x => x.Name);
+                    break;
+
+                case "Budget":
+                    departments = departments.OrderBy(x => x.Budget);
+                    break;
+
+                case "Budget_desc":
+                    departments = departments.OrderByDescending(x => x.Budget);
+                    break;
+
+                case "Date":
+                    departments = departments.OrderBy(x => x.StartDate);
+                    break;
+
+                case "Date_desc":
+                    departments = departments.OrderByDescending(x => x.StartDate);
+                    break;
+
+                case "Admin":
+                    departments = departments.OrderBy(x => x.Administrator.LastName);
+                    break;
+
+                case "Admin_desc":
+                    departments = departments.OrderByDescending(x => x.Administrator.LastName);
+                    break;
+
+                default:
+                    departments = departments.OrderBy(x => x.Name);
+                    break;
+            }
+
+            var lr = departments.Select(x => new
+            {
+                Name = x.Name,
+                Budget = x.Budget,
+                StartDate = x.StartDate,
+                Administrator = x.Administrator
+            });
+
+            Report report = new Report(lr.ToReportSource());
+            report.TextFields.Title = "Departments Report";
+            report.TextFields.Header = string.Format(@"Report Generated: {0} Total Departments: {1}", DateTime.Now, departments.Count());
+
+            report.DataFields["StartDate"].DataFormatString = "{0:M/d/yyyy}";
+
+            report.RenderHints.FreezeRows = 4;
+
+            return report;
         }
     }
 }

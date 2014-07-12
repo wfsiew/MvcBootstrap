@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
-
 namespace MvcBootstrap.Models
 {
     public abstract class Person
@@ -29,6 +28,11 @@ namespace MvcBootstrap.Models
             {
                 return LastName + ", " + FirstMidName;
             }
+        }
+
+        public override string ToString()
+        {
+            return FullName;
         }
     }
 }

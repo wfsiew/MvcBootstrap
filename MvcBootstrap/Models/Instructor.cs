@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Text;
 
 namespace MvcBootstrap.Models
 {
@@ -15,5 +16,30 @@ namespace MvcBootstrap.Models
 
         public virtual ICollection<Course> Courses { get; set; }
         public virtual OfficeAssignment OfficeAssignment { get; set; }
+
+        public string GetCourses(bool ishtml)
+        {
+            IEnumerable<Course> l = Courses;
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < l.Count(); i++)
+            {
+                Course o = l.ElementAt(i);
+                string s = string.Format("{0} {1}", o.CourseID, o.Title);
+
+                if (i < l.Count() - 1)
+                {
+                    if (ishtml)
+                        sb.Append(s + "<br/>");
+
+                    else
+                        sb.AppendLine(s);
+                }
+
+                else
+                    sb.Append(s);
+            }
+
+            return sb.ToString();
+        }
     }
 }

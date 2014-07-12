@@ -29,5 +29,10 @@ namespace MvcBootstrap.Models
 
         public virtual Instructor Administrator { get; set; }
         public virtual ICollection<Course> Courses { get; set; }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

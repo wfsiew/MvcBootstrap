@@ -10,6 +10,8 @@ using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using DoddleReport;
+using DoddleReport.Web;
 
 namespace MvcBootstrap.Controllers
 {
@@ -211,10 +213,101 @@ namespace MvcBootstrap.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult HtmlReport(string sortOrder, string currentFilter, string searchString)
+        {
+            Report report = GetReport(sortOrder, currentFilter, searchString);
+            return new ReportResult(report);
+        }
+
+        public ActionResult PdfReport(string sortOrder, string currentFilter, string searchString)
+        {
+            Report report = GetReport(sortOrder, currentFilter, searchString);
+            return new ReportResult(report, new DoddleReport.iTextSharp.PdfReportWriter(), "application/pdf");
+        }
+
+        public ActionResult ExcelReport(string sortOrder, string currentFilter, string searchString)
+        {
+            var report = GetReport(sortOrder, currentFilter, searchString);
+            return new ReportResult(report, new DoddleReport.OpenXml.ExcelReportWriter(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        }
+
+        public ActionResult CsvReport(string sortOrder, string currentFilter, string searchString)
+        {
+            var report = GetReport(sortOrder, currentFilter, searchString);
+            return new ReportResult(report, new DoddleReport.Writers.DelimitedTextReportWriter(), "text/plain;charset=UTF-8");
+        }
+
         protected override void Dispose(bool disposing)
         {
             repository.Dispose();
             base.Dispose(disposing);
+        }
+
+        private Report GetReport(string sortOrder, string currentFilter, string searchString)
+        {
+            ViewBag.menu = MENU;
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NameSortParm = string.IsNullOrEmpty(sortOrder) ? "Name_desc" : "";
+            ViewBag.FirstNameSortParm = sortOrder == "FirstName" ? "FirstName_desc" : "FirstName";
+            ViewBag.DateSortParm = sortOrder == "Date" ? "Date_desc" : "Date";
+
+            if (searchString == null)
+                searchString = currentFilter;
+
+            string keyword = string.IsNullOrEmpty(searchString) ? null : searchString.ToUpper();
+
+            ViewBag.CurrentFilter = searchString;
+
+            var students = repository.GetStudents();
+
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                students = students.Where(x => x.LastName.ToUpper().Contains(keyword) ||
+                    x.FirstMidName.ToUpper().Contains(keyword));
+            }
+
+            switch (sortOrder)
+            {
+                case "Name_desc":
+                    students = students.OrderByDescending(x => x.LastName);
+                    break;
+
+                case "FirstName":
+                    students = students.OrderBy(x => x.FirstMidName);
+                    break;
+
+                case "FirstName_desc":
+                    students = students.OrderByDescending(x => x.FirstMidName);
+                    break;
+
+                case "Date":
+                    students = students.OrderBy(x => x.EnrollmentDate);
+                    break;
+
+                case "Date_desc":
+                    students = students.OrderByDescending(x => x.EnrollmentDate);
+                    break;
+
+                default:
+                    students = students.OrderBy(x => x.LastName);
+                    break;
+            }
+
+            var lr = students.Select(x => new
+            {
+                LastName = x.LastName,
+                FirstName = x.FirstMidName,
+                EnrollmentDate = x.EnrollmentDate
+            });
+            Report report = new Report(lr.ToReportSource());
+            report.TextFields.Title = "Students Report";
+            report.TextFields.Header = string.Format(@"Report Generated: {0} Total Students: {1}", DateTime.Now, students.Count());
+
+            report.DataFields["EnrollmentDate"].DataFormatString = "{0:yyyy-MM-dd}";
+
+            report.RenderHints.FreezeRows = 4;
+
+            return report;
         }
     }
 }
