@@ -21,6 +21,9 @@ namespace MvcBootstrap.Models
         {
             IEnumerable<Course> l = Courses;
             StringBuilder sb = new StringBuilder();
+            if (l == null)
+                return null;
+
             for (int i = 0; i < l.Count(); i++)
             {
                 Course o = l.ElementAt(i);
